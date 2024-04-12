@@ -1,0 +1,7 @@
+v 4
+file . "register16bits.vhd" "0179feaf197e7a6d931ef37d02043131609f39ba" "20240412192905.275":
+  entity register16bits at 1( 0) + 0 on 13;
+  architecture rtl of register16bits at 17( 331) + 0 on 14;
+file . "ula.vhd" "275ebaaa63275910b6c08892e12eaabb2d801d25" "20240412192049.155":
+  entity ula at 1( 0) + 0 on 11;
+  architecture rtl of ula at 15( 306) + 0 on 12;
