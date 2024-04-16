@@ -1,7 +1,7 @@
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
-use ieee.math_real.all;
+
 
 entity ula is
     port (
@@ -13,11 +13,11 @@ entity ula is
 end entity;
 
 architecture rtl of ula is
-    signal product : unsigned(31 downto 0);
+    signal product : unsigned(31 downto 0);  
 begin
-    product <=  entr0 + entr1  when sel="00" else
-                entr0 - entr1  when sel="01" else
-                entr0 or entr1 when sel="10" else
+    product <=  "0000000000000000" & (entr0 + entr1)  when sel="00" else
+                "0000000000000000" & (entr0 - entr1)   when sel="01" else
+                "0000000000000000" & (entr0 or entr1)  when sel="10" else
                 entr0 * entr1  when sel="11" else
                "00000000000000000000000000000000";
     saida <= product(15 downto 0);
