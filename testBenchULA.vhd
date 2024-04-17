@@ -12,90 +12,87 @@ architecture rtl of testBenchULA is
       entr0 : in unsigned(15 downto 0);
       entr1 : in unsigned(15 downto 0);
       sel   : in unsigned(1 downto 0);
-      saida : out unsigned(15 downto 0)
-
+      saida : out unsigned(15 downto 0);
+      zero  : out std_logic;
+      carry : out std_logic
     );
   end component;
-  signal in_entr0 : unsigned(15 downto 0);
-  signal in_entr1 : unsigned(15 downto 0);
-  signal sel_op      : unsigned(1 downto 0);
-  signal saida    : unsigned(15 downto 0);
+  signal entr0, entr1, saida : unsigned(15 downto 0);
+  signal sel                 : unsigned(1 downto 0);
+  signal zero, carry         : std_logic;
 begin
   uut : ula
   port map
   (
-    entr0 => in_entr0,
-    entr1 => in_entr1,
-    sel   => sel_op,
-    saida => saida
+    entr0 => entr0,
+    entr1 => entr1,
+    sel   => sel,
+    saida => saida,
+    zero  => zero,
+    carry => carry
   );
   process
   begin
-    in_entr0 <= "0000000000000000";
-    in_entr1 <= "0000000000000000";
-    sel_op<= "00";
+    --soma
+    entr0 <= "1111111111111111"; 
+    entr1 <= "0000000000000001";
+    sel<= "00";
     wait for 50 ns;
-    in_entr0 <= "0000000000000000";
-    in_entr1 <= "0000000000000001";
-    sel_op<= "00";
+    entr0 <= "0000010110010010";
+    entr1 <= "0000000010110001";
+    sel<= "00";
     wait for 50 ns;
-    in_entr0 <= "0000000000000001";
-    in_entr1 <= "0000000000000000";
-    sel_op<= "00";
+    entr0 <= "0111111111111001";
+    entr1 <= "1111111111111100";
+    sel<= "00";
     wait for 50 ns;
-    in_entr0 <= "0000000000000001";
-    in_entr1 <= "0000000000000001";
-    sel_op<= "00";
+    entr0 <= "0000000000000000";
+    entr1 <= "0000000000000000";
+    sel<= "00";
+    --sub
     wait for 50 ns;
-    in_entr0 <= "0000000000000000";
-    in_entr1 <= "0000000000000000";
-    sel_op<= "01";
+    entr0 <= "0000000000000111";
+    entr1 <= "0000000000000011";
+    sel<= "01";
     wait for 50 ns;
-    in_entr0 <= "0000000000000000";
-    in_entr1 <= "0000000000000001";
-    sel_op<= "01";
+    entr0 <= "0000000000000011";
+    entr1 <= "0000000000000111";
+    sel<= "01";
     wait for 50 ns;
-    in_entr0 <= "0000000000000001";
-    in_entr1 <= "0000000000000000";
-    sel_op<= "01";
+    entr0 <= "0000000000000001";
+    entr1 <= "1111111111111111";
+    sel<= "01";
     wait for 50 ns;
-    in_entr0 <= "0000000000000001";
-    in_entr1 <= "0000000000000001";
-    sel_op<= "01";
+    entr0 <= "0000000000000001";
+    entr1 <= "0000000000000001";
+    sel<= "01";
+    --or
     wait for 50 ns;
-    in_entr0 <= "0000000000000000";
-    in_entr1 <= "0000000000000000";
-    sel_op<= "10";
+    entr0 <= "0000000000000000";
+    entr1 <= "0000000000000000";
+    sel<= "10";
     wait for 50 ns;
-    in_entr0 <= "0000000000000000";
-    in_entr1 <= "0000000000000001";
-    sel_op<= "10";
+    entr0 <= "0000000000000000";
+    entr1 <= "0000000000000001";
+    sel<= "10";
     wait for 50 ns;
-    in_entr0 <= "0000000000000001";
-    in_entr1 <= "0000000000000000";
-    sel_op<= "10";
+    --multi
+    entr0 <= "0000000000000011";
+    entr1 <= "0000000000000100";
+    sel<= "11";
     wait for 50 ns;
-    in_entr0 <= "0000000000000001";
-    in_entr1 <= "0000000000000001";
-    sel_op<= "10";
+    entr0 <= "0000000000001111";
+    entr1 <= "0000000000000101";
+    sel<= "11";
     wait for 50 ns;
-    in_entr0 <= "0000000000000000";
-    in_entr1 <= "0000000000000000";
-    sel_op<= "11";
+    entr0 <= "0111111111111111";--32767
+    entr1 <= "0000000000000010";--2
+    sel<= "11";--65534
     wait for 50 ns;
-    in_entr0 <= "0000000000000000";
-    in_entr1 <= "0000000000000001";
-    sel_op<= "11";
+    entr0 <= "1000000000000000";--32768
+    entr1 <= "0000000000000010";--2
+    sel<= "11";--65536 => 0
     wait for 50 ns;
-    in_entr0 <= "0000000000000001";
-    in_entr1 <= "0000000000000000";
-    sel_op<= "11";
-    wait for 50 ns;
-    in_entr0 <= "0000000000000001";
-    in_entr1 <= "0000000000000001";
-    sel_op<= "11";
-    wait for 50 ns;
-    
     wait;
   end process;
 end architecture;
