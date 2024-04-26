@@ -19,6 +19,10 @@ architecture rtl of ula is
     signal temp : unsigned(16 downto 0);
     signal saida_temp : unsigned(15 downto 0);
     
+    -- sel: 0 soma
+    -- sel: 1 sub
+    -- sel: 2 or
+    -- sel: 3 multi
 begin
     temp    <=  "0" & entr0 + entr1  when sel="00" else
                 "0" & entr0 - entr1  when sel="01" else

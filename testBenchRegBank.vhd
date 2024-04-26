@@ -68,37 +68,37 @@ begin
     wait for 200 ns;
     wr_en <= '1';
     data_in <= "0111010101011001";  
-    writeSel<= "000";                --write at R1
+    writeSel<= "000";                --write at R0
     wait for 100 ns;
     data_in <= "1000111110101010";
-    writeSel<= "001";                --write at R2
-    outSel  <= "000";                --show R1
+    writeSel<= "001";                --write at R1
+    outSel  <= "000";                --show R0
     wait for 100 ns;
     data_in <= "0000000000000001";  
-    writeSel<= "010";                --write at R3
+    writeSel<= "010";                --write at R2
     outSel  <= "001";                --show R2
     wait for 100 ns;
     data_in <= "0011100011100001";  
-    writeSel<= "011";                --write at R4
-    outSel  <= "010";                --show R3
+    writeSel<= "011";                --write at R3
+    outSel  <= "010";                --show R2
     wait for 100 ns;
     data_in <= "0001000000000001";  
-    writeSel<= "100";                --write at R5
-    outSel  <= "011";                --show R4
+    writeSel<= "100";                --write at R4
+    outSel  <= "011";                --show R3
     wait for 100 ns;
     data_in <= "0000011111110001";  
-    writeSel<= "101";                --write at R6
-    outSel  <= "100";                --show R5
+    writeSel<= "101";                --write at R5
+    outSel  <= "100";                --show R4
     wait for 100 ns;
     data_in <= "1111111111111111";  
-    writeSel<= "110";                --write at R7
-    outSel  <= "101";                --show R6
+    writeSel<= "110";                --write at R6
+    outSel  <= "101";                --show R5
     wait for 100 ns;
     data_in <= "0000000000000111";  
-    writeSel<= "111";                --write at R8
-    outSel  <= "110";                --show R7
+    writeSel<= "111";                --write at R7
+    outSel  <= "110";                --show R6
     wait for 100 ns;
-    outSel  <= "111";                --show R8
+    outSel  <= "111";                --show R7
     wait;
  end process;
 
