@@ -10,19 +10,21 @@ end entity testBenchRBU;
 architecture rtl of testBenchRBU is
 component ulaBankTL is
     port (
-        inData            : in  unsigned(15 downto 0);
-        outView           : out unsigned(15 downto 0);
-        writeSel          : in  unsigned(2 downto 0);
-        outSel            : in unsigned(2 downto 0);
-        aluOp             : in unsigned(1 downto 0);
-        wr_en, clk, reset : in std_logic;
-        zero, carry       : out std_logic
+        inData, cte            : in  unsigned(15 downto 0);
+        outView                : out unsigned(15 downto 0);
+        inAView                : out unsigned(15 downto 0);
+        inBView                : out unsigned(15 downto 0);
+        writeSel               : in  unsigned(2 downto 0);
+        outSel                 : in unsigned(2 downto 0);
+        aluOp                  : in unsigned(1 downto 0);
+        wr_en, clk, reset, src : in std_logic;
+        zero, carry            : out std_logic
     );
 end component;
-    signal inData, outView                : unsigned(15 downto 0);
-    signal writeSel, outSel               : unsigned(2 downto 0);
-    signal aluOp                          : unsigned(1 downto 0);
-    signal wr_en, clk, reset, zero, carry : std_logic;
+    signal inData, outView, cte, inAView, inBView                : unsigned(15 downto 0);
+    signal writeSel, outSel                    : unsigned(2 downto 0);
+    signal aluOp                               : unsigned(1 downto 0);
+    signal wr_en, clk, reset, zero, carry, src : std_logic;
 
     signal finished            : std_logic := '0';
     constant period_time       : time      := 100 ns;
@@ -32,6 +34,8 @@ begin
 uut : ulaBankTL port map (
     inData   => inData, 
     outView  => outView,
+    inBView  => inBView,
+    inAView  => inAView,
     writeSel => writeSel,    
     outSel   => outSel,
     aluOp    => aluOp,       
@@ -39,7 +43,9 @@ uut : ulaBankTL port map (
     clk      => clk,
     reset    => reset,
     zero     => zero,
-    carry    => carry
+    carry    => carry,
+    src      => src,
+    cte      => cte
 );
     
 reset_global: process -- reset signal
@@ -71,11 +77,45 @@ end process clk_proc;
 process                      -- test signals
 begin
   wait for 200 ns;
+  src <= '0';                    --mux ulaSrcA 0 - cte; 1- registerBank   
   wr_en <= '1';
-  inData <= "0000000000000001";  
-  aluOp<= "00";
-  writeSel <= "000";
-  outSel   <= "000";                               
+  inData <= "0000000000000001";  --entrada do registerBank
+  cte <=    "0000000000000000";
+  aluOp<= "00";                  --operação na ula
+  writeSel <= "000";             --qual register escrever
+  outSel   <= "000";
+  wait for 100 ns;
+  inData <= "0000000000000010"; 
+  writeSel <= "001";
+  wait for 100 ns;
+  inData <= "0000000000000011"; 
+  writeSel <= "010";
+  wait for 100 ns;
+  inData <= "0000000000000100"; 
+  writeSel <= "011";
+  wait for 100 ns;
+  inData <= "0000000000000101"; 
+  writeSel <= "100";
+  wait for 100 ns;
+  inData <= "0000000000000110"; 
+  writeSel <= "101";
+  wait for 100 ns;
+  inData <= "0000000000000111";  
+  writeSel <= "110";
+  wait for 100 ns;
+  cte <= "0000000000000001";
+  wait for 100 ns;
+  cte <= "0000000000000111";
+  wait for 100 ns;
+  src <= '1';
+  outSel <= "000";
+  wait for 100 ns;
+  outSel <= "001";
+  wait for 100 ns;
+  outSel <= "010";
+  wait for 100 ns;
+  outSel <= "011";
+
   wait;
 end process;
 end architecture;

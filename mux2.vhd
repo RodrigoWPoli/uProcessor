@@ -6,8 +6,9 @@ use ieee.math_real.all;
 
 entity mux2 is
     port (
-        in_0, in_1, src   : in std_logic;
-        output            : out std_logic
+        in_0, in_1   : in unsigned(15 downto 0);
+        src          : in std_logic;
+        output       : out unsigned(15 downto 0)
     );
 end entity mux2;
 
@@ -15,5 +16,5 @@ architecture rtl of mux2 is
 begin
     output <= in_0 when src = '0' else
               in_1 when src = '1' else
-            '0';
+            "0000000000000000";
 end architecture;

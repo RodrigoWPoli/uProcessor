@@ -5,13 +5,15 @@ use ieee.math_real.all;
 
 entity ulaBankTL is
     port (
-        inData            : in  unsigned(15 downto 0);
-        outView           : out unsigned(15 downto 0);
-        writeSel          : in  unsigned(2 downto 0);
-        outSel            : in unsigned(2 downto 0);
-        aluOp             : in unsigned(1 downto 0);
-        wr_en, clk, reset : in std_logic;
-        zero, carry       : out std_logic
+        inData, cte            : in  unsigned(15 downto 0);
+        outView                : out unsigned(15 downto 0);
+        inAView                : out unsigned(15 downto 0);
+        inBView                : out unsigned(15 downto 0);
+        writeSel               : in  unsigned(2 downto 0);
+        outSel                 : in unsigned(2 downto 0);
+        aluOp                  : in unsigned(1 downto 0);
+        wr_en, clk, reset, src : in std_logic;
+        zero, carry            : out std_logic
     );
 end entity ulaBankTL;
 
@@ -24,8 +26,7 @@ architecture rtl of ulaBankTL is
             writeSel     : in  unsigned(2 downto 0);
             outSel       : in unsigned(2 downto 0);
             wr_en        : in std_logic;
-            clk          : in std_logic;
-            reset        : in std_logic
+            clk, reset   : in std_logic
             );
     end component;
     component register16bits is
@@ -49,14 +50,15 @@ architecture rtl of ulaBankTL is
     end component;
     component mux2 is
         port (
-            in_0, in_1, src   : in std_logic;
-            output            : out std_logic
+            in_0, in_1   : in unsigned(15 downto 0);
+            src          : in std_logic;
+            output       : out unsigned(15 downto 0)
         );
     end component;
-    signal ulaOut, ulaInA, ulaInB : unsigned(15 downto 0);
+    signal ulaOut, ulaInA, ulaInB, rbOut : unsigned(15 downto 0);
 begin
 bank : registerBank port map (
-    outData  => ulaInA,
+    outData  => rbOut,
     inData   => inData,
     writeSel => writeSel,
     outSel   => outSel,
@@ -72,6 +74,12 @@ alu : ula port map (
     zero  => zero,
     carry => carry
 );
+mux : mux2 port map (
+    in_0 => cte,
+    in_1 => rbOut,
+    src => src,
+    output => ulaInA 
+);
 acu : register16bits port map (
     clk      => clk,
     reset    => reset,
@@ -80,5 +88,6 @@ acu : register16bits port map (
     data_out => ulaInB
 );
     outView <= ulaOut;
-
+    inAView <= ulaInA;
+    inBView <= ulaInB;
 end architecture;
