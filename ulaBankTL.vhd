@@ -5,14 +5,15 @@ use ieee.math_real.all;
 
 entity ulaBankTL is
     port (
-        inData, cte            : in  unsigned(15 downto 0);
+        inData                 : in  unsigned(15 downto 0);
         outView                : out unsigned(15 downto 0);
         inAView                : out unsigned(15 downto 0);
         inBView                : out unsigned(15 downto 0);
         writeSel               : in  unsigned(2 downto 0);
         outSel                 : in unsigned(2 downto 0);
         aluOp                  : in unsigned(1 downto 0);
-        wr_en, clk, reset, src : in std_logic;
+        wr_en, clk, reset, aluSrc, 
+        loadSrc, a_wr_en       : in std_logic;
         zero, carry            : out std_logic
     );
 end entity ulaBankTL;
@@ -55,11 +56,11 @@ architecture rtl of ulaBankTL is
             output       : out unsigned(15 downto 0)
         );
     end component;
-    signal ulaOut, ulaInA, ulaInB, rbOut : unsigned(15 downto 0);
+    signal ulaOut, ulaInA, ulaInB, rbOut, rbInData : unsigned(15 downto 0);
 begin
 bank : registerBank port map (
     outData  => rbOut,
-    inData   => inData,
+    inData   => rbInData,
     writeSel => writeSel,
     outSel   => outSel,
     wr_en    => wr_en,
@@ -74,16 +75,22 @@ alu : ula port map (
     zero  => zero,
     carry => carry
 );
-mux : mux2 port map (
-    in_0 => cte,
+aluSrcAMux : mux2 port map (
+    in_0 => inData,  --immediate 
     in_1 => rbOut,
-    src => src,
+    src => aluSrc,
     output => ulaInA 
+);
+rbLoadSrcMux : mux2 port map (
+    in_0 => inData,  --immediate 
+    in_1 => ulaInB,  --output of accu
+    src => loadSrc,
+    output => rbInData 
 );
 acu : register16bits port map (
     clk      => clk,
     reset    => reset,
-    wr_en    => wr_en,
+    wr_en    => a_wr_en,
     data_in  => ulaOut,
     data_out => ulaInB
 );
