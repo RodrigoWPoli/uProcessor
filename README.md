@@ -1,6 +1,10 @@
 µProcessor architecture for Computer architecture class in UTFPR
 
 
+run with make simulate tb=testBenchXXXX
+
+add rtl and tb names to elaborate in makefile for new files
+
 ghdl and gtkwave commands:
 
 ghdl -a name.vhdl
