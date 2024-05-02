@@ -66,7 +66,6 @@ clean:
 	$(QUIET)ghdl --remove --workdir=$(WORKDIR)
 	$(QUIET)rm -f $(WORKDIR)/*
 	$(QUIET)rm -rf $(WORKDIR)
-	$(QUIET)ghdl --remove --workdir=$(WAVEDIR)
 	$(QUIET)rm -f $(WAVEDIR)/*
 	$(QUIET)rm -rf $(WAVEDIR)
 	@echo ">>> done..."

@@ -22,10 +22,10 @@ component ulaBankTL is
         zero, carry            : out std_logic
     );
 end component;
-    signal inData, outView, inAView, inBView                   : unsigned(15 downto 0);
-    signal writeSel, outSel                                         : unsigned(2 downto 0);
-    signal aluOp                                                    : unsigned(1 downto 0);
-    signal wr_en, a_wr_en, clk, reset, zero, carry, aluSrc, loadSrc : std_logic;
+    signal inData, outView, inAView, inBView                        : unsigned(15 downto 0) := "0000000000000000";
+    signal writeSel, outSel                                         : unsigned(2 downto 0)  := "000";
+    signal aluOp                                                    : unsigned(1 downto 0)  := "00";
+    signal wr_en, a_wr_en, clk, reset, zero, carry, aluSrc, loadSrc : std_logic             := '0';
 
     signal finished            : std_logic := '0';
     constant period_time       : time      := 100 ns;
