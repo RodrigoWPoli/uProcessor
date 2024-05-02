@@ -17,9 +17,9 @@ architecture rtl of testBenchULA is
       carry : out std_logic
     );
   end component;
-  signal entr0, entr1, saida : unsigned(15 downto 0);
-  signal sel                 : unsigned(1 downto 0);
-  signal zero, carry         : std_logic;
+  signal entr0, entr1, saida : unsigned(15 downto 0) := "0000000000000000";
+  signal sel                 : unsigned(1 downto 0) := "00";
+  signal zero, carry         : std_logic := '0';
 begin
   uut : ula
   port map

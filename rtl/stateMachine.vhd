@@ -4,7 +4,7 @@ use ieee.numeric_std.all;
 use ieee.math_real.all;
 
 
-entity state_machine is
+entity stateMachine is
     port (
         clk   : in std_logic;
         reset : in std_logic;
@@ -14,13 +14,13 @@ entity state_machine is
     );
 end entity;
 
-architecture a_state_machine of state_machine is
+architecture a_state_machine of stateMachine is
     signal estado : std_logic;
 begin
     process(clk, reset, enable) 
     begin                
         if reset='1' then
-           estado <= "0";
+           estado <= '0';
       elsif enable='1' then
          if rising_edge(clk) then
             estado <= not estado;
