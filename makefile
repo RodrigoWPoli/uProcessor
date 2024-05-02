@@ -35,7 +35,7 @@ analyze: clean
 .PHONY: elaborate
 elaborate: analyze
 	@echo ">>> elaborating designs.."
-	@echo ">>> sources:"
+	@echo ">>> sources..."
 	$(QUIET)mkdir -p $(WORKDIR)
 	$(QUIET)$(CC) -e $(CFLAGS) --workdir=$(WORKDIR) mux2
 	$(QUIET)$(CC) -e $(CFLAGS) --workdir=$(WORKDIR) register16bits
@@ -45,7 +45,7 @@ elaborate: analyze
 	$(QUIET)$(CC) -e $(CFLAGS) --workdir=$(WORKDIR) rom
 	$(QUIET)$(CC) -e $(CFLAGS) --workdir=$(WORKDIR) stateMachine
 #	$(QUIET)$(CC) -e $(CFLAGS) --workdir=$(WORKDIR) programCounter 
-	@echo ">>> sources:"
+	@echo ">>> test benches..."
 	$(QUIET)$(CC) -e $(CFLAGS) --workdir=$(WORKDIR) testBenchULA
 	$(QUIET)$(CC) -e $(CFLAGS) --workdir=$(WORKDIR) testBenchRegister
 	$(QUIET)$(CC) -e $(CFLAGS) --workdir=$(WORKDIR) testBenchRegBank
