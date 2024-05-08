@@ -5,13 +5,14 @@ CC = ghdl
 SIM = gtkwave
 WORKDIR = debug
 WAVEDIR = wave
-QUIET = @
+QUIET = @ #remove '@' if you want the commands to show in terminal
 
 tb?= testBench
 
 # analyze these first since some other circuits depend on these
 VHDL_SOURCES += rtl/mux2.vhd
 VHDL_SOURCES += rtl/register16bits.vhd
+VHDL_SOURCES += rtl/registerPC.vhd
 VHDL_SOURCES += rtl/ula.vhd
 
 # add rest of the files in rtl directory for analyzing
@@ -44,7 +45,8 @@ elaborate: analyze
 	$(QUIET)$(CC) -e $(CFLAGS) --workdir=$(WORKDIR) ulaBankTL
 	$(QUIET)$(CC) -e $(CFLAGS) --workdir=$(WORKDIR) rom
 	$(QUIET)$(CC) -e $(CFLAGS) --workdir=$(WORKDIR) stateMachine
-#	$(QUIET)$(CC) -e $(CFLAGS) --workdir=$(WORKDIR) programCounter 
+	$(QUIET)$(CC) -e $(CFLAGS) --workdir=$(WORKDIR) registerPC
+	$(QUIET)$(CC) -e $(CFLAGS) --workdir=$(WORKDIR) programCounter 
 	@echo ">>> test benches..."
 	$(QUIET)$(CC) -e $(CFLAGS) --workdir=$(WORKDIR) testBenchULA
 	$(QUIET)$(CC) -e $(CFLAGS) --workdir=$(WORKDIR) testBenchRegister
