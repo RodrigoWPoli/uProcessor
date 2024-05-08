@@ -9,7 +9,7 @@ entity rom is
 end entity;
 architecture rtl of rom is
    type mem is array (0 to 127) of unsigned(15 downto 0);
-   constant conteudo_rom : mem := (
+   constant rom_content : mem := (
       -- caso endereco => conteudo
         0 => "0000000000000000",  -- Endereço 0: NOP
         1 => "0000000000000001",  -- Endereço 1: NOP
@@ -34,7 +34,7 @@ begin
    process(clk)
    begin
       if(rising_edge(clk)) then
-         dado <= conteudo_rom(to_integer(endereco));
+         dado <= rom_content(to_integer(endereco));
       end if;
    end process;
 end architecture;

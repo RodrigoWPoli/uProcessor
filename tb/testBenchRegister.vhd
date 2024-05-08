@@ -5,7 +5,7 @@ use ieee.numeric_std.all;
 entity testBenchRegister is
 end entity;
 
-architecture rtl of testBenchRegister is
+architecture tb of testBenchRegister is
   component register16Bits
     port (
         clk     : in std_logic;
