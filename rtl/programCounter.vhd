@@ -12,7 +12,7 @@ entity programCounter is
    );
 end entity;
 
-architecture a_programCounter of programCounter is
+architecture rtl of programCounter is
    component registerPC 
     port (
         clk   : in std_logic;
@@ -24,9 +24,9 @@ architecture a_programCounter of programCounter is
     end component;
     component stateMachine is
       port (
-         clk   : in std_logic;
-         reset : in std_logic;
-         data  : out std_logic
+         clk       : in std_logic;
+         reset     : in std_logic;
+         data_out  : out std_logic
      );
     end component;
 
@@ -48,7 +48,7 @@ begin
  sm : stateMachine port map (
    clk => clk,
    reset => reset,
-   data => state
+   data_out => state
  );
    process(clk)
    begin

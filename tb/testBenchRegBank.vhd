@@ -5,7 +5,7 @@ use ieee.numeric_std.all;
 entity testBenchRegBank is
 end entity;
 
-architecture rtl of testBenchRegBank is
+architecture tb of testBenchRegBank is
   component registerBank
     port (
       outData      : out unsigned(15 downto 0);

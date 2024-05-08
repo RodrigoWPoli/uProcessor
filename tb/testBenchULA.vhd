@@ -5,7 +5,7 @@ use ieee.math_real.all;
 entity testBenchULA is
 end entity;
 
-architecture rtl of testBenchULA is
+architecture tb of testBenchULA is
   component ula
     port
     (

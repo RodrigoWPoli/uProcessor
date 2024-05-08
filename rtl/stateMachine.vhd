@@ -8,23 +8,23 @@ entity stateMachine is
     port (
         clk   : in std_logic;
         reset : in std_logic;
-        data  : out std_logic
+        data_out : out std_logic
     );
 end entity;
 
-architecture a_state_machine of stateMachine is
-    signal estado : std_logic;
+architecture rtl of stateMachine is
+    signal state : std_logic;
 begin
     process(clk, reset) 
     begin                
         if reset='1' then
-           estado <= '0';
+           state <= '0';
         else
          if rising_edge(clk) then
-            estado <= not estado;
+            state <= not state;
          end if;
       end if;
    end process;
-    data <= estado;
+    data_out <= state;
 end architecture;
 

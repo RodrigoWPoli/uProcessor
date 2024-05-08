@@ -7,7 +7,7 @@ entity rom is
          dado     : out unsigned(15 downto 0) 
    );
 end entity;
-architecture a_rom of rom is
+architecture rtl of rom is
    type mem is array (0 to 127) of unsigned(15 downto 0);
    constant conteudo_rom : mem := (
       -- caso endereco => conteudo

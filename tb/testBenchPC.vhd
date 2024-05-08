@@ -5,7 +5,7 @@ use ieee.math_real.all;
 entity testBenchPC is
 end entity;
 
-architecture rtl of testBenchPC is
+architecture tb of testBenchPC is
   component programCounter
     port( 
 	     clk      : in std_logic;

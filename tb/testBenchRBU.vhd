@@ -7,7 +7,7 @@ use ieee.math_real.all;
 entity testBenchRBU is
 end entity testBenchRBU;
 
-architecture rtl of testBenchRBU is
+architecture tb of testBenchRBU is
 component ulaBankTL is
     port (
         inData                 : in  unsigned(15 downto 0);
