@@ -6,9 +6,9 @@ use ieee.math_real.all;
 entity control_unit is
   port
   (
+    instr     : in unsigned(15 downto 0);
     jump_en   : out std_logic;
-    jump_addr : out unsigned(6 downto 0);
-    instr     : in unsigned(15 downto 0)
+    jump_addr : out unsigned(6 downto 0)
   );
 end entity;
 

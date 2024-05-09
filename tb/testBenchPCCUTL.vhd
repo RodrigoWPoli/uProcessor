@@ -15,7 +15,7 @@ architecture tb of testBenchPCCUTL is
       data_out_view : out unsigned(15 downto 0)
     );
   end component;
-  signal data_in       : unsigned(6 downto 0)  := "0000000";
+  signal jumpAddr      : unsigned(6 downto 0)  := "0000000";
   signal instruction   : unsigned(15 downto 0) := "0000000000000000";
   signal clk, reset    : std_logic             := '0';
   signal finished      : std_logic             := '0';
@@ -26,7 +26,7 @@ begin
   (
     clk           => clk,
     reset         => reset,
-    data_in_view  => data_in,
+    data_in_view  => jumpAddr,
     data_out_view => instruction
   );
   reset_global : process

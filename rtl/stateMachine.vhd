@@ -1,30 +1,27 @@
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
-use ieee.math_real.all;
-
-
 entity stateMachine is
-    port (
-        clk   : in std_logic;
-        reset : in std_logic;
-        data_out : out std_logic
-    );
+  port
+  (
+    clk, reset : in std_logic;
+    state      : out unsigned(1 downto 0)
+  );
 end entity;
-
 architecture rtl of stateMachine is
-    signal state : std_logic;
+  signal state_signal : unsigned(1 downto 0);
 begin
-    process(clk, reset) 
-    begin                
-        if reset='1' then
-           state <= '0';
-        else
-         if rising_edge(clk) then
-            state <= not state;
-         end if;
+  process (clk, reset)
+  begin
+    if reset = '1' then
+      state_signal <= "00";
+    elsif rising_edge(clk) then
+      if state_signal = "10" then -- se agora esta em 2
+        state_signal <= "00"; -- o prox vai voltar ao zero
+      else
+        state_signal <= state_signal + 1; -- senao avanca
       end if;
-   end process;
-    data_out <= state;
+    end if;
+  end process;
+  state <= state_signal;
 end architecture;
-

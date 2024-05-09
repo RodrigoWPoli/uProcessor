@@ -1,0 +1,20 @@
+opcode:  operação:
+0000     nop
+0001     add
+0010     addi
+0011     ld
+0100     lda
+0101     cmpi
+0110     sub
+0111     subi
+1000     OR
+1001     mult
+1010     mov
+1011     jmp (jump absoluto)
+
+nop:
+0000_0000_0000_0000
+
+add: add rs -> R0 a R1
+opcode_A_rs(RBOutSel)_
+0001_1_XXX_
