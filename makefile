@@ -12,7 +12,8 @@ tb?= testBench
 # analyze these first since some other circuits depend on these
 VHDL_SOURCES += rtl/mux2.vhd
 VHDL_SOURCES += rtl/register16bits.vhd
-VHDL_SOURCES += rtl/registerPC.vhd
+VHDL_SOURCES += rtl/programCounter.vhd
+VHDL_SOURCES += rtl/control_unit.vhd
 VHDL_SOURCES += rtl/ula.vhd
 
 # add rest of the files in rtl directory for analyzing
@@ -45,14 +46,19 @@ elaborate: analyze
 	$(QUIET)$(CC) -e $(CFLAGS) --workdir=$(WORKDIR) ulaBankTL
 	$(QUIET)$(CC) -e $(CFLAGS) --workdir=$(WORKDIR) rom
 	$(QUIET)$(CC) -e $(CFLAGS) --workdir=$(WORKDIR) stateMachine
-	$(QUIET)$(CC) -e $(CFLAGS) --workdir=$(WORKDIR) registerPC
-	$(QUIET)$(CC) -e $(CFLAGS) --workdir=$(WORKDIR) programCounter 
+	$(QUIET)$(CC) -e $(CFLAGS) --workdir=$(WORKDIR) programCounter
+	$(QUIET)$(CC) -e $(CFLAGS) --workdir=$(WORKDIR) control_unit
+	$(QUIET)$(CC) -e $(CFLAGS) --workdir=$(WORKDIR) pc_cu_tl 
 	@echo ">>> test benches..."
 	$(QUIET)$(CC) -e $(CFLAGS) --workdir=$(WORKDIR) testBenchULA
 	$(QUIET)$(CC) -e $(CFLAGS) --workdir=$(WORKDIR) testBenchRegister
 	$(QUIET)$(CC) -e $(CFLAGS) --workdir=$(WORKDIR) testBenchRegBank
 	$(QUIET)$(CC) -e $(CFLAGS) --workdir=$(WORKDIR) testBenchRBU
-#	$(QUIET)$(CC) -e $(CFLAGS) --workdir=$(WORKDIR) testBenchPC
+	$(QUIET)$(CC) -e $(CFLAGS) --workdir=$(WORKDIR) testBenchCU
+	$(QUIET)$(CC) -e $(CFLAGS) --workdir=$(WORKDIR) testBenchSM
+	$(QUIET)$(CC) -e $(CFLAGS) --workdir=$(WORKDIR) testBenchRom
+	$(QUIET)$(CC) -e $(CFLAGS) --workdir=$(WORKDIR) testBenchPC
+	$(QUIET)$(CC) -e $(CFLAGS) --workdir=$(WORKDIR) testBenchPCCUTL
 
 .PHONY: simulate
 simulate: elaborate

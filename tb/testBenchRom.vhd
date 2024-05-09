@@ -8,8 +8,8 @@ end entity;
 architecture tb of testBenchRom is
   component rom
     port( clk     : in std_logic;
-         endereco : in unsigned(6 downto 0);
-         dado     : out unsigned(15 downto 0) 
+         address  : in unsigned(6 downto 0);
+         data     : out unsigned(15 downto 0) 
    );
   end component;
 
@@ -23,8 +23,8 @@ begin
   port map
   (
     clk     => clk,
-    endereco=> address,
-    dado    => data 
+    address => address,
+    data    => data 
   );
   
   sim_time_proc: process
