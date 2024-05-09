@@ -6,7 +6,7 @@ entity testBenchPCCUTL is
 end entity;
 
 architecture tb of testBenchPCCUTL is
-  component pcTL
+  component pc_cu_tl
     port
     (
       clk           : in std_logic;
@@ -21,7 +21,7 @@ architecture tb of testBenchPCCUTL is
   signal finished      : std_logic             := '0';
   constant period_time : time                  := 100 ns;
 begin
-  uut : pcTL
+  uut : pc_cu_tl
   port map
   (
     clk           => clk,

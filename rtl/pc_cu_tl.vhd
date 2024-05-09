@@ -1,7 +1,7 @@
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
-entity pcTL is
+entity pc_cu_tl is
   port
   (
     clk           : in std_logic;
@@ -11,7 +11,7 @@ entity pcTL is
   );
 end entity;
 
-architecture rtl of pcTL is
+architecture rtl of pc_cu_tl is
   component programCounter
     port
     (
