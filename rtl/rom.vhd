@@ -12,7 +12,7 @@ architecture rtl of rom is
    constant rom_content : mem := (
       -- case adress => content
         0 => "0000111111111111", -- não colocar a instrução nop aqui
-        1 => "0000000000000001", -- nop deve ser 0x0000
+        1 => "0000000000000000", -- nop deve ser 0x0000
         2 => "0000000000000010",
         3 => "0000000000000011",
         4 => "0000000000000100",

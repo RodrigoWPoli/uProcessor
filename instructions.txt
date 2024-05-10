@@ -15,6 +15,19 @@ opcode:  operação:
 nop:
 0000_0000_0000_0000
 
-add: add rs -> R0 a R1
-opcode_A_rs(RBOutSel)_
-0001_1_XXX_
+add: add rs -> R0 a R7
+opcode_A_rs(RBOutSel)_AluOp_nop
+0001_1_XXX_00_000000
+
+addi: addi cte
+opcode_A_AluOp_cte
+0010_1_00_000000000
+
+ld: ld rs cte
+opcode_rs(RBInSel)_rb-wr-en_loadSrc_cte
+0011_XXX_1_0_0000000
+
+lda: lda cte
+opcode_A_loadASrc_cte
+0100_1_0_0000000000
+
