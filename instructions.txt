@@ -2,11 +2,11 @@ opcode:  operação:
 0000     nop
 0001     add
 0010     addi
-0011     ld
-0100     lda
+0011     sub
+0100     subi
 0101     cmpi
-0110     sub
-0111     subi
+0110     ld
+0111     lda
 1000     OR
 1001     mult
 1010     mov
@@ -15,19 +15,27 @@ opcode:  operação:
 nop:
 0000_0000_0000_0000
 
-add: add rs -> R0 a R7
+add:
+A <- A + RS
+add rs -> R0 a R7
 opcode_A_rs(RBOutSel)_AluOp_nop
 0001_1_XXX_00_000000
 
-addi: addi cte
+addi: 
+A <- A + cte
+addi cte
 opcode_A_AluOp_cte
 0010_1_00_000000000
 
-ld: ld rs cte
+ld: 
+RD <- cte
+ld rs cte
 opcode_rs(RBInSel)_rb-wr-en_loadSrc_cte
-0011_XXX_1_0_0000000
+0110_XXX_1_0_0000000
 
-lda: lda cte
+lda: 
+A <- cte
+lda cte
 opcode_A_loadASrc_cte
-0100_1_0_0000000000
+0111_1_0_0000000000
 

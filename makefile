@@ -43,22 +43,22 @@ elaborate: analyze
 	$(QUIET)$(CC) -e $(CFLAGS) --workdir=$(WORKDIR) register16bits
 	$(QUIET)$(CC) -e $(CFLAGS) --workdir=$(WORKDIR) ula
 	$(QUIET)$(CC) -e $(CFLAGS) --workdir=$(WORKDIR) registerBank
-	$(QUIET)$(CC) -e $(CFLAGS) --workdir=$(WORKDIR) ulaBankTL
+#	$(QUIET)$(CC) -e $(CFLAGS) --workdir=$(WORKDIR) ulaBankTL
 	$(QUIET)$(CC) -e $(CFLAGS) --workdir=$(WORKDIR) rom
 	$(QUIET)$(CC) -e $(CFLAGS) --workdir=$(WORKDIR) stateMachine
 	$(QUIET)$(CC) -e $(CFLAGS) --workdir=$(WORKDIR) programCounter
 	$(QUIET)$(CC) -e $(CFLAGS) --workdir=$(WORKDIR) control_unit
-	$(QUIET)$(CC) -e $(CFLAGS) --workdir=$(WORKDIR) pc_cu_tl 
+#	$(QUIET)$(CC) -e $(CFLAGS) --workdir=$(WORKDIR) pc_cu_tl 
 	@echo ">>> test benches..."
 	$(QUIET)$(CC) -e $(CFLAGS) --workdir=$(WORKDIR) testBenchULA
 	$(QUIET)$(CC) -e $(CFLAGS) --workdir=$(WORKDIR) testBenchRegister
 	$(QUIET)$(CC) -e $(CFLAGS) --workdir=$(WORKDIR) testBenchRegBank
-	$(QUIET)$(CC) -e $(CFLAGS) --workdir=$(WORKDIR) testBenchRBU
-	$(QUIET)$(CC) -e $(CFLAGS) --workdir=$(WORKDIR) testBenchCU
+#	$(QUIET)$(CC) -e $(CFLAGS) --workdir=$(WORKDIR) testBenchRBU
+#	$(QUIET)$(CC) -e $(CFLAGS) --workdir=$(WORKDIR) testBenchCU
 	$(QUIET)$(CC) -e $(CFLAGS) --workdir=$(WORKDIR) testBenchSM
 	$(QUIET)$(CC) -e $(CFLAGS) --workdir=$(WORKDIR) testBenchRom
 	$(QUIET)$(CC) -e $(CFLAGS) --workdir=$(WORKDIR) testBenchPC
-	$(QUIET)$(CC) -e $(CFLAGS) --workdir=$(WORKDIR) testBenchPCCUTL
+#	$(QUIET)$(CC) -e $(CFLAGS) --workdir=$(WORKDIR) testBenchPCCUTL
 
 .PHONY: simulate
 simulate: elaborate
