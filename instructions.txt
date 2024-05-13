@@ -10,19 +10,22 @@ opcode:  operação:
 1000     OR
 1001     mult
 1010     mov
-1011     jmp (jump absoluto)
+1011     mova
+1100     jmp (jump absoluto)
 
 nop:
 0000_0000_0000_0000
 
 add:
 A <- A + RS
+seleciona o registrador para ler, src da ula para registradores, aciona A para escrita, operação de soma na ULA, 
 add rs -> R0 a R7
-opcode_A_rs(RBOutSel)_AluOp_nop
-0001_1_XXX_00_000000
+opcode_rs(RBOutSel)_AluOp_nop
+0001_XXX_00_0000000
 
 addi: 
 A <- A + cte
+aciona A para escrita, operação de soma na ULA, seleciona o src da ula para cte
 addi cte
 opcode_A_AluOp_cte
 0010_1_00_000000000
@@ -39,3 +42,22 @@ lda cte
 opcode_A_loadASrc_cte
 0111_1_0_0000000000
 
+
+Fios:
+A_wr_en -> escrita no acumulador
+add, addi, sub, subi, lda, OR, mult, mova
+rb_wr_en -> escrita nos registradores
+mov, ld, 
+rb_out_sel -> qual registrador ler
+add, sub, OR, mult,
+rb_in_sel -> qual registrador escrever
+mov, ld,
+aluSrc -> qual input da ula (cte ou rb)
+add, addi, sub, subi, OR, mult, cmpi
+loadSrc -> qual dado escrever no rb
+mov, ld
+loadASrc -> qual dado escrever no acumulador
+add, addi, sub, subi, lda, OR, mult, mova
+jump_en -> ativar jump
+jmp
+jump_addr -> qual endereço pro jump

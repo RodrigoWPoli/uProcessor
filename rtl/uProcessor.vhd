@@ -88,19 +88,19 @@ architecture rtl of uProcessor is
   component control_unit is
     port
     (
-      instr                                                 : in unsigned(15 downto 0);
-      jump_en, rb_wr_en, a_wr_en, aluSrc, loadSrc, loadASrc : out std_logic;
-      rb_in_sel, rb_out_sel                                 : out unsigned(2 downto 0);
-      aluOp                                                 : out unsigned(1 downto 0);
-      jump_addr                                             : out unsigned(6 downto 0)
+      instr                                                                : in unsigned(15 downto 0);
+      jump_en, rb_wr_en, a_wr_en, aluSrc, loadSrc, loadASrc, invalidOpcode : out std_logic;
+      rb_in_sel, rb_out_sel                                                : out unsigned(2 downto 0);
+      aluOp                                                                : out unsigned(1 downto 0);
+      jump_addr                                                            : out unsigned(6 downto 0)
     );
   end component;
   signal aluOut, aluInA, aluInB, rbOut, rbInData, imm, instr, aData : unsigned(15 downto 0);
   signal pc_out, pc_in, step, jump_addr                             : unsigned(6 downto 0);
   signal rb_in_sel, rb_out_sel                                      : unsigned(2 downto 0);
   signal aluOp, state                                               : unsigned(1 downto 0);
-  signal rb_wr_en, zero, carry, aluSrc, loadASrc, loadSrc, a_wr_en, 
-  pc_en, jump_en : std_logic;
+  signal rb_wr_en, zero, carry, aluSrc, loadASrc, loadSrc, a_wr_en,
+  pc_en, jump_en, opcodeException : std_logic;
 begin
   bank : registerBank port map
   (
@@ -183,17 +183,18 @@ begin
   cu : control_unit port
   map
   (
-  instr      => instr,
-  jump_en    => jump_en,
-  rb_wr_en   => rb_wr_en,
-  a_wr_en    => a_wr_en,
-  aluSrc     => aluSrc,
-  loadSrc    => loadSrc,
-  loadASrc   => loadASrc,
-  rb_in_sel  => rb_in_sel,
-  rb_out_sel => rb_out_sel,
-  aluOp      => aluOp,
-  jump_addr  => jump_addr
+  instr         => instr,
+  jump_en       => jump_en,
+  rb_wr_en      => rb_wr_en,
+  a_wr_en       => a_wr_en,
+  aluSrc        => aluSrc,
+  loadSrc       => loadSrc,
+  loadASrc      => loadASrc,
+  rb_in_sel     => rb_in_sel,
+  rb_out_sel    => rb_out_sel,
+  aluOp         => aluOp,
+  jump_addr     => jump_addr,
+  invalidOpcode => opcodeException
   );
   step  <= pc_out + "0000001";
   pc_en <= '1' when state = "01" else
