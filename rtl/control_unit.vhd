@@ -7,17 +7,22 @@ entity control_unit is
   port
   (
     instr                                                                : in unsigned(15 downto 0);
+    state                                                                : in unsigned(1 downto 0);
     jump_en, rb_wr_en, a_wr_en, aluSrc, loadSrc, loadASrc, invalidOpcode : out std_logic;
     rb_in_sel, rb_out_sel                                                : out unsigned(2 downto 0);
     aluOp                                                                : out unsigned(1 downto 0);
-    jump_addr                                                            : out unsigned(6 downto 0)
+    jump_addr                                                            : out unsigned(6 downto 0);
+    imm                                                                  : out unsigned(15 downto 0)
   );
 end entity;
 
 architecture rtl of control_unit is
-  signal opcode : unsigned(3 downto 0);
+  signal opcode  : unsigned(3 downto 0) := "0000";
+  signal instr_s : unsigned(15 downto 0) := "0000000000000000";
 begin
-  opcode <= instr(15 downto 12);
+  instr_s <= instr when state = "10" else
+    "0000000000000000";
+  opcode <= instr_s(15 downto 12);
   --escrita no acumulador
   a_wr_en <= '1' when opcode = "0001" or --add
     opcode = "0010" or --addi
@@ -29,8 +34,8 @@ begin
     opcode = "1011" else --mova
     '0';
   --escrita nos registradores
-  rb_wr_en <= '1' when opcode = "0110" or --mov
-    opcode = "1010" else --ld
+  rb_wr_en <= '1' when opcode = "0110" or --ld
+    opcode = "1010" else --mov
     '0';
   -- qual input da ula (cte ou rb)
   aluSrc <= '0' when opcode = "0010" or --addi
@@ -47,18 +52,24 @@ begin
   jump_en <= '1' when opcode = "1011" else --jmp
     '0';
 
-  rb_out_sel <= instr(10 downto 8) when opcode = "0001" else --add
+  rb_out_sel <= instr_s(11 downto 9) when opcode = "0001" else --add todo sub
     "000";
-  rb_in_sel <= instr(10 downto 8) when opcode = "1010" or --add
-    opcode = "0110" else
+  rb_in_sel <= instr_s(11 downto 9) when opcode = "1010" or --mov
+    opcode = "0110" else --ld
     "000";
   aluOp <= "00" when opcode = "0001" else --add
+    "00" when opcode = "0010" else --addi
     "00";
 
-  jump_addr <= instr(11 downto 5);
+  imm <= "0000000" & instr_s(8 downto 0) when opcode = "0110" else --ld
+    "00000" & instr_s(10 downto 0) when opcode = "0111" else --lda
+    "0000" & instr_s(11 downto 0) when opcode = "0010" else --addi
+    "0000000000000000";
+
+  jump_addr <= instr_s(11 downto 5);
 
   invalidOpcode <= '1' when opcode = "1101" or
-   opcode = "1110" or 
-   opcode = "1111" else
+    opcode = "1110" or
+    opcode = "1111" else
     '0';
 end architecture;

@@ -89,18 +89,20 @@ architecture rtl of uProcessor is
     port
     (
       instr                                                                : in unsigned(15 downto 0);
+      state                                                                : in unsigned(1 downto 0);
       jump_en, rb_wr_en, a_wr_en, aluSrc, loadSrc, loadASrc, invalidOpcode : out std_logic;
       rb_in_sel, rb_out_sel                                                : out unsigned(2 downto 0);
       aluOp                                                                : out unsigned(1 downto 0);
-      jump_addr                                                            : out unsigned(6 downto 0)
+      jump_addr                                                            : out unsigned(6 downto 0);
+      imm                                                                  : out unsigned(15 downto 0)
     );
   end component;
-  signal aluOut, aluInA, aluInB, rbOut, rbInData, imm, instr, aData : unsigned(15 downto 0);
-  signal pc_out, pc_in, step, jump_addr                             : unsigned(6 downto 0);
-  signal rb_in_sel, rb_out_sel                                      : unsigned(2 downto 0);
-  signal aluOp, state                                               : unsigned(1 downto 0);
+  signal aluOut, aluInA, aluInB, rbOut, rbInData, imm, instr, aData : unsigned(15 downto 0) := "0000000000000000";
+  signal pc_out, pc_in, step, jump_addr                             : unsigned(6 downto 0)  := "0000000";
+  signal rb_in_sel, rb_out_sel                                      : unsigned(2 downto 0)  := "000";
+  signal aluOp, state                                               : unsigned(1 downto 0)  := "00";
   signal rb_wr_en, zero, carry, aluSrc, loadASrc, loadSrc, a_wr_en,
-  pc_en, jump_en, opcodeException : std_logic;
+  pc_en, jump_en, opcodeException : std_logic := '0';
 begin
   bank : registerBank port map
   (
@@ -194,8 +196,11 @@ begin
   rb_out_sel    => rb_out_sel,
   aluOp         => aluOp,
   jump_addr     => jump_addr,
-  invalidOpcode => opcodeException
+  imm           => imm,
+  invalidOpcode => opcodeException,
+  state         => state
   );
+
   step  <= pc_out + "0000001";
   pc_en <= '1' when state = "01" else
     '0';

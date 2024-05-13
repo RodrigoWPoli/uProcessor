@@ -9,7 +9,7 @@ entity stateMachine is
   );
 end entity;
 architecture rtl of stateMachine is
-  signal state_signal : unsigned(1 downto 0);
+  signal state_signal : unsigned(1 downto 0) :="00";
 begin
   process (clk, reset)
   begin

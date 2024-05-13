@@ -49,6 +49,7 @@ elaborate: analyze
 	$(QUIET)$(CC) -e $(CFLAGS) --workdir=$(WORKDIR) programCounter
 	$(QUIET)$(CC) -e $(CFLAGS) --workdir=$(WORKDIR) control_unit
 #	$(QUIET)$(CC) -e $(CFLAGS) --workdir=$(WORKDIR) pc_cu_tl 
+	$(QUIET)$(CC) -e $(CFLAGS) --workdir=$(WORKDIR) uProcessor
 	@echo ">>> test benches..."
 	$(QUIET)$(CC) -e $(CFLAGS) --workdir=$(WORKDIR) testBenchULA
 	$(QUIET)$(CC) -e $(CFLAGS) --workdir=$(WORKDIR) testBenchRegister

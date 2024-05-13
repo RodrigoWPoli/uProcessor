@@ -15,7 +15,7 @@ entity programCounter is
 end entity;
 
 architecture rtl of programCounter is
-    signal data : unsigned(6 downto 0);
+    signal data : unsigned(6 downto 0) := "0000000";
 begin
     process(clk, reset, wr_en) 
     begin                
