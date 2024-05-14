@@ -88,21 +88,21 @@ architecture rtl of uProcessor is
   component control_unit is
     port
     (
-      instr                                                                : in unsigned(15 downto 0);
-      state                                                                : in unsigned(1 downto 0);
-      jump_en, rb_wr_en, a_wr_en, aluSrc, loadSrc, loadASrc, invalidOpcode : out std_logic;
-      rb_in_sel, rb_out_sel                                                : out unsigned(2 downto 0);
-      aluOp                                                                : out unsigned(1 downto 0);
-      jump_addr                                                            : out unsigned(6 downto 0);
-      imm                                                                  : out unsigned(15 downto 0)
+      instr                                                                       : in unsigned(15 downto 0);
+      state                                                                       : in unsigned(1 downto 0);
+      jump_en, rb_wr_en, a_wr_en, aluSrc, loadSrc, loadASrc, invalidOpcode, AorRB : out std_logic;
+      rb_in_sel, rb_out_sel                                                       : out unsigned(2 downto 0);
+      aluOp                                                                       : out unsigned(1 downto 0);
+      jump_addr                                                                   : out unsigned(6 downto 0);
+      imm                                                                         : out unsigned(15 downto 0)
     );
   end component;
-  signal aluOut, aluInA, aluInB, rbOut, rbInData, imm, instr, aData : unsigned(15 downto 0) := "0000000000000000";
-  signal pc_out, pc_in, step, jump_addr                             : unsigned(6 downto 0)  := "0000000";
-  signal rb_in_sel, rb_out_sel                                      : unsigned(2 downto 0)  := "000";
-  signal aluOp, state                                               : unsigned(1 downto 0)  := "00";
+  signal aluOut, aluInA, aluInB, rbOut, rbInData, imm, instr, aData, AorRBData : unsigned(15 downto 0) := "0000000000000000";
+  signal pc_out, pc_in, step, jump_addr                                        : unsigned(6 downto 0)  := "0000000";
+  signal rb_in_sel, rb_out_sel                                                 : unsigned(2 downto 0)  := "000";
+  signal aluOp, state                                                          : unsigned(1 downto 0)  := "00";
   signal rb_wr_en, zero, carry, aluSrc, loadASrc, loadSrc, a_wr_en,
-  pc_en, jump_en, opcodeException : std_logic := '0';
+  pc_en, jump_en, opcodeException, AorRB : std_logic := '0';
 begin
   bank : registerBank port map
   (
@@ -133,9 +133,16 @@ begin
   rbSrcMux : mux2 port
   map (
   in_0   => imm,
-  in_1   => aluInB,
+  in_1   => AorRBData,
   src    => loadSrc,
   output => rbInData
+  );
+  AorRBMux : mux2 port
+  map (
+  in_0   => aluInB,
+  in_1   => rbOut,
+  src    => AorRB,
+  output => AorRBData
   );
   ASrcMux : mux2 port
   map (
@@ -163,7 +170,7 @@ begin
   reset    => reset
 
   );
-  mux : mux2sevenBits port
+  aluMux : mux2sevenBits port
   map (
   in_0   => step,
   in_1   => jump_addr,
@@ -176,13 +183,13 @@ begin
   reset => reset,
   state => state
   );
-  mem : rom port
+  memory : rom port
   map (
   clk     => clk,
   address => pc_out,
   data    => instr
   );
-  cu : control_unit port
+  controlUnit : control_unit port
   map
   (
   instr         => instr,
@@ -198,7 +205,8 @@ begin
   jump_addr     => jump_addr,
   imm           => imm,
   invalidOpcode => opcodeException,
-  state         => state
+  state         => state,
+  AorRB         => AorRB
   );
 
   step  <= pc_out + "0000001";

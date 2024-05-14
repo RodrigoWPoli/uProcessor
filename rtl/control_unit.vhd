@@ -6,18 +6,18 @@ use ieee.math_real.all;
 entity control_unit is
   port
   (
-    instr                                                                : in unsigned(15 downto 0);
-    state                                                                : in unsigned(1 downto 0);
-    jump_en, rb_wr_en, a_wr_en, aluSrc, loadSrc, loadASrc, invalidOpcode : out std_logic;
-    rb_in_sel, rb_out_sel                                                : out unsigned(2 downto 0);
-    aluOp                                                                : out unsigned(1 downto 0);
-    jump_addr                                                            : out unsigned(6 downto 0);
-    imm                                                                  : out unsigned(15 downto 0)
+    instr                                                                       : in unsigned(15 downto 0);
+    state                                                                       : in unsigned(1 downto 0);
+    jump_en, rb_wr_en, a_wr_en, aluSrc, loadSrc, loadASrc, invalidOpcode, AorRB : out std_logic;
+    rb_in_sel, rb_out_sel                                                       : out unsigned(2 downto 0);
+    aluOp                                                                       : out unsigned(1 downto 0);
+    jump_addr                                                                   : out unsigned(6 downto 0);
+    imm                                                                         : out unsigned(15 downto 0)
   );
 end entity;
 
 architecture rtl of control_unit is
-  signal opcode  : unsigned(3 downto 0) := "0000";
+  signal opcode  : unsigned(3 downto 0)  := "0000";
   signal instr_s : unsigned(15 downto 0) := "0000000000000000";
 begin
   instr_s <= instr when state = "10" else
@@ -48,22 +48,30 @@ begin
   --qual dado escrever no acumulador
   loadASrc <= '0' when opcode = "0111" else --lda
     '1';--sempre vem da ula
+  --input do rb ou A para o mov
+  AorRB <= '1' when opcode = "1010" else --mov
+    '0';
   --ativar jump
   jump_en <= '1' when opcode = "1011" else --jmp
     '0';
 
-  rb_out_sel <= instr_s(11 downto 9) when opcode = "0001" else --add todo sub
+  rb_out_sel <= instr_s(11 downto 9) when opcode = "0001" or --add 
+    opcode = "0011" else --sub
+    instr_s(10 downto 8) when opcode = "0001" else --mov
     "000";
-  rb_in_sel <= instr_s(11 downto 9) when opcode = "1010" or --mov
-    opcode = "0110" else --ld
+  rb_in_sel <= instr_s(7 downto 5) when opcode = "1010" else --mov
+    instr_s(11 downto 9) when opcode = "0110" else --ld
     "000";
   aluOp <= "00" when opcode = "0001" else --add
     "00" when opcode = "0010" else --addi
+    "01" when opcode = "0011" else --sub
+    "01" when opcode = "0100" else
     "00";
 
   imm <= "0000000" & instr_s(8 downto 0) when opcode = "0110" else --ld
     "00000" & instr_s(10 downto 0) when opcode = "0111" else --lda
     "0000" & instr_s(11 downto 0) when opcode = "0010" else --addi
+    "0000" & instr_s(11 downto 0) when opcode = "0100" else --subi
     "0000000000000000";
 
   jump_addr <= instr_s(11 downto 5);
