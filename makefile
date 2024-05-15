@@ -40,6 +40,7 @@ elaborate: analyze
 	@echo ">>> sources..."
 	$(QUIET)mkdir -p $(WORKDIR)
 	$(QUIET)$(CC) -e $(CFLAGS) --workdir=$(WORKDIR) mux2
+	$(QUIET)$(CC) -e $(CFLAGS) --workdir=$(WORKDIR) mux2sevenBits
 	$(QUIET)$(CC) -e $(CFLAGS) --workdir=$(WORKDIR) register16bits
 	$(QUIET)$(CC) -e $(CFLAGS) --workdir=$(WORKDIR) ula
 	$(QUIET)$(CC) -e $(CFLAGS) --workdir=$(WORKDIR) registerBank
@@ -60,6 +61,7 @@ elaborate: analyze
 	$(QUIET)$(CC) -e $(CFLAGS) --workdir=$(WORKDIR) testBenchRom
 	$(QUIET)$(CC) -e $(CFLAGS) --workdir=$(WORKDIR) testBenchPC
 #	$(QUIET)$(CC) -e $(CFLAGS) --workdir=$(WORKDIR) testBenchPCCUTL
+	$(QUIET)$(CC) -e $(CFLAGS) --workdir=$(WORKDIR) testBenchUP
 
 .PHONY: simulate
 simulate: elaborate

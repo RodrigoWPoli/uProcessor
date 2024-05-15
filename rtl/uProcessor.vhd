@@ -90,19 +90,19 @@ architecture rtl of uProcessor is
     (
       instr                                                                       : in unsigned(15 downto 0);
       state                                                                       : in unsigned(1 downto 0);
-      jump_en, rb_wr_en, a_wr_en, aluSrc, loadSrc, loadASrc, invalidOpcode, AorRB : out std_logic;
+      jump_en, rb_wr_en, a_wr_en, aluSrc, loadSrc, loadASrc, invalidOpcode, UorRB : out std_logic;
       rb_in_sel, rb_out_sel                                                       : out unsigned(2 downto 0);
       aluOp                                                                       : out unsigned(1 downto 0);
       jump_addr                                                                   : out unsigned(6 downto 0);
       imm                                                                         : out unsigned(15 downto 0)
     );
   end component;
-  signal aluOut, aluInA, aluInB, rbOut, rbInData, imm, instr, aData, AorRBData : unsigned(15 downto 0) := "0000000000000000";
-  signal pc_out, pc_in, step, jump_addr                                        : unsigned(6 downto 0)  := "0000000";
-  signal rb_in_sel, rb_out_sel                                                 : unsigned(2 downto 0)  := "000";
-  signal aluOp, state                                                          : unsigned(1 downto 0)  := "00";
+  signal aluOut, aluInA, aluInB, rbOut, rbInData, imm, instr, aData, aDataAux : unsigned(15 downto 0) := "0000000000000000";
+  signal pc_out, pc_in, step, jump_addr                                       : unsigned(6 downto 0)  := "0000000";
+  signal rb_in_sel, rb_out_sel                                                : unsigned(2 downto 0)  := "000";
+  signal aluOp, state                                                         : unsigned(1 downto 0)  := "00";
   signal rb_wr_en, zero, carry, aluSrc, loadASrc, loadSrc, a_wr_en,
-  pc_en, jump_en, opcodeException, AorRB : std_logic := '0';
+  pc_en, jump_en, opcodeException, UorRB: std_logic := '0';
 begin
   bank : registerBank port map
   (
@@ -133,23 +133,23 @@ begin
   rbSrcMux : mux2 port
   map (
   in_0   => imm,
-  in_1   => AorRBData,
+  in_1   => aluInB,
   src    => loadSrc,
   output => rbInData
-  );
-  AorRBMux : mux2 port
-  map (
-  in_0   => aluInB,
-  in_1   => rbOut,
-  src    => AorRB,
-  output => AorRBData
   );
   ASrcMux : mux2 port
   map (
   in_0   => imm,
-  in_1   => aluOut,
+  in_1   => aDataAux,
   src    => loadASrc,
   output => aData
+  );
+  ASrcMux2 : mux2 port
+  map (
+  in_0   => rbOut,
+  in_1   => aluOut,
+  src    => UorRB,
+  output => aDataAux
   );
   A : register16bits port
   map (
@@ -206,10 +206,10 @@ begin
   imm           => imm,
   invalidOpcode => opcodeException,
   state         => state,
-  AorRB         => AorRB
+  UorRB         => UorRB
   );
-
+  -- state: 00 fetch, 01 decode, 10 execute
   step  <= pc_out + "0000001";
-  pc_en <= '1' when state = "01" else
+  pc_en <= '1' when state = "01" or jump_en = '1' else
     '0';
 end architecture;

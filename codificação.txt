@@ -1,0 +1,61 @@
+MSB b15               b0 LSB
+    |                 |
+nop:
+    0000_XXXX_XXXX_XXXX
+
+add:
+    0001_SSS_XXXXXXXXX
+
+addi: 
+    0010_CCCCCCCCCCCC
+
+ld: 
+    0110_DDD_CCCCCCCCC
+
+lda: 
+    0111_CCCCCCCCCCCC
+
+sub:
+    0011_SSS_XXXXXXXXX
+
+subi: 
+    0100_CCCCCCCCCCCC
+
+mov:
+    1010_DDD_CCCCCCCCC
+
+mova:
+    1011_SSS_XXXXXXXXX
+
+cmpi:
+    0101_CCCCCCCCCCCC
+
+or:
+    1000_SSS_XXXXXXXXX
+
+mult:
+    1001_SSS_XXXXXXXXX
+
+jump:
+    1100_AAAAAAA_XXXXX
+
+X: irrelevante
+D: registrador destino
+S: registrador fonte
+C: constante
+A: endereço
+
+opcode:  operação:
+0000     nop
+0001     add
+0010     addi
+0011     sub
+0100     subi
+0101     cmpi (compara com constante)
+0110     ld
+0111     lda
+1000     OR
+1001     mult
+1010     mov
+1011     mova
+1100     jump (absoluto)

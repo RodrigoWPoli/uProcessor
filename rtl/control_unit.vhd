@@ -8,7 +8,7 @@ entity control_unit is
   (
     instr                                                                       : in unsigned(15 downto 0);
     state                                                                       : in unsigned(1 downto 0);
-    jump_en, rb_wr_en, a_wr_en, aluSrc, loadSrc, loadASrc, invalidOpcode, AorRB : out std_logic;
+    jump_en, rb_wr_en, a_wr_en, aluSrc, loadSrc, loadASrc, invalidOpcode, UorRB : out std_logic;
     rb_in_sel, rb_out_sel                                                       : out unsigned(2 downto 0);
     aluOp                                                                       : out unsigned(1 downto 0);
     jump_addr                                                                   : out unsigned(6 downto 0);
@@ -47,34 +47,40 @@ begin
     '0';
   --qual dado escrever no acumulador
   loadASrc <= '0' when opcode = "0111" else --lda
-    '1';--sempre vem da ula
-  --input do rb ou A para o mov
-  AorRB <= '1' when opcode = "1010" else --mov
-    '0';
+    '1';--vem do mux abaixo
+  UorRB <= '0' when opcode = "1011" else --mova
+    '1';--sempre da ula
   --ativar jump
-  jump_en <= '1' when opcode = "1011" else --jmp
+  jump_en <= '1' when opcode = "1100" else --jmp
     '0';
 
   rb_out_sel <= instr_s(11 downto 9) when opcode = "0001" or --add 
-    opcode = "0011" else --sub
-    instr_s(10 downto 8) when opcode = "0001" else --mov
+    opcode = "0011" or --sub
+    opcode = "1011" or --mova
+    opcode = "1000" or --or
+    opcode = "1001" else --mult
     "000";
-  rb_in_sel <= instr_s(7 downto 5) when opcode = "1010" else --mov
-    instr_s(11 downto 9) when opcode = "0110" else --ld
+  rb_in_sel <= instr_s(11 downto 9) when opcode = "1010" or --mov
+    opcode = "0110" else --ld
     "000";
-  aluOp <= "00" when opcode = "0001" else --add
-    "00" when opcode = "0010" else --addi
-    "01" when opcode = "0011" else --sub
-    "01" when opcode = "0100" else
+  aluOp <= "00" when opcode = "0001" or --add
+    opcode = "0010" else --addi
+    "01" when opcode = "0011" or --sub
+    opcode = "0100" or --subi
+    opcode = "0101" else --cmpi
+    "10" when opcode = "1000" else --or
+    "11" when opcode = "1001" else --mult
     "00";
 
   imm <= "0000000" & instr_s(8 downto 0) when opcode = "0110" else --ld
     "00000" & instr_s(10 downto 0) when opcode = "0111" else --lda
-    "0000" & instr_s(11 downto 0) when opcode = "0010" else --addi
-    "0000" & instr_s(11 downto 0) when opcode = "0100" else --subi
+    "0000" & instr_s(11 downto 0) when opcode = "0010" or --addi
+    opcode = "0100" or --subi
+    opcode = "0101" else --cmpi
     "0000000000000000";
 
-  jump_addr <= instr_s(11 downto 5);
+  jump_addr <= instr_s(11 downto 5) when opcode = "1100" else 
+    "0000000";
 
   invalidOpcode <= '1' when opcode = "1101" or
     opcode = "1110" or
