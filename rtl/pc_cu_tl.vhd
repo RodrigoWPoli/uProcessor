@@ -25,9 +25,8 @@ architecture rtl of pc_cu_tl is
   component stateMachine is
     port
     (
-      clk      : in std_logic;
-      reset    : in std_logic;
-      data_out : out std_logic
+      clk, reset : in std_logic;
+      state      : out unsigned(1 downto 0)
     );
   end component;
   component mux2sevenBits is
@@ -55,9 +54,10 @@ architecture rtl of pc_cu_tl is
     );
   end component;
 
-  signal pc_out, pc_in, step, jump_addr : unsigned(6 downto 0);
+  signal pc_out, pc_in, step, jump_addr : unsigned(6 downto 0) := "0000000";
   signal data_out                       : unsigned(15 downto 0);
-  signal state, pc_en, jump_en          : std_logic := '0'; -- maquina de estado de 1 bit
+  signal state                          : unsigned(1 downto 0);
+  signal pc_en, jump_en                 : std_logic := '0';
 
 begin
   pcreg : programCounter
@@ -79,9 +79,9 @@ begin
   );
   sm : stateMachine port
   map (
-  clk      => clk,
-  reset    => reset,
-  data_out => state
+  clk   => clk,
+  reset => reset,
+  state => state
   );
   mem : rom port
   map (
@@ -97,7 +97,7 @@ begin
   );
 
   step  <= pc_out + "0000001";
-  pc_en <= '1' when state = '1' else
+  pc_en <= '1' when state = "01" else
     '0';
   data_in_view  <= jump_addr;
   data_out_view <= data_out;

@@ -1,52 +1,31 @@
-µProcessor architecture for Computer architecture class in UTFPR
-
+## µProcessor architecture for Computer architecture class in UTFPR
 
 run with make simulate tb=testBenchXXXX
 
 add rtl and tb names to elaborate in makefile for new files
 
-ghdl and gtkwave commands:
+## Instruções OBRIGATÓRIAS a serem usadas na sua validação:
 
-ghdl -a name.vhdl
+- [x] ADD ctes: Há ADDI que pode somar com constante,
 
-ghdl -e name
+- [x] ADD ops: ADD com dois operandos apenas,
 
-ghdl -r name --wave=name.ghw
+- [x] Acumulador ou não: ULA com acumulador,
 
-gtkwave name.ghw
+- [x] Carga de constantes: Carrega diretamente com LD sem somar,
 
-Instruções OBRIGATÓRIAS a serem usadas na sua validação:
+- [x] Comparações: CMP presente,
 
-'ADD ctes': 'Há ADDI que pode somar com constante',
+- [x] Flags obrigatórias: [Zero, Carry],
 
+- [x] SUB ctes: Há SUBI que pode subtrair com constante,
 
-'ADD ops': 'ADD com dois operandos apenas',
+- [x] SUB ops: SUB com dois operandos apenas,
 
-'Acumulador ou não': 'ULA com acumulador',
+- [x] Saltos: Incondicional é absoluto e condicional é relativo,
 
+- [x] Subtração: SUB sem borrow,
 
-'Carga de constantes': 'Carrega diretamente com LD sem somar',
+- [ ] Validação -- complicações: Exceção opcode inválido,
 
-
-'Comparações': 'CMP presente',
-
-
-'Flags obrigatórias': ['Zero', 'Carry'],
-
-
-'SUB ctes': 'Há SUBI que pode subtrair com constante',
-
-
-'SUB ops': 'SUB com dois operandos apenas',
-
-
-'Saltos': 'Incondicional é absoluto e condicional é relativo',
-
-
-'Subtração': 'SUB sem borrow',
-
-
-'Validação -- complicações': 'Exceção opcode inválido',
-
-
-'Validação -- final do loop': 'Detecção do MSB setado usando OR'
+- [ ] Validação -- final do loop: Detecção do MSB setado usando OR

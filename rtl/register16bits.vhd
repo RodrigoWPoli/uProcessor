@@ -15,7 +15,7 @@ entity register16bits is
 end entity;
 
 architecture rtl of register16bits is
-    signal data : unsigned(15 downto 0);
+    signal data : unsigned(15 downto 0) := "0000000000000000";
 begin
     process(clk, reset, wr_en) 
     begin                

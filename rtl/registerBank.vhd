@@ -26,7 +26,7 @@ architecture rtl of registerBank is
             data_out : out unsigned(15 downto 0)
         );
     end component;
-signal r0_en, r1_en, r2_en, r3_en, r4_en, r5_en, r6_en, r7_en    : std_logic;
+signal r0_en, r1_en, r2_en, r3_en, r4_en, r5_en, r6_en, r7_en    : std_logic := '0';
 signal outS1Data,
        outS2Data,
        outS3Data,
@@ -34,7 +34,7 @@ signal outS1Data,
        outS5Data, 
        outS6Data,
        outS7Data,
-       outS0Data                                                 : unsigned(15 downto 0);
+       outS0Data                                                 : unsigned(15 downto 0) := "0000000000000000";
 
 begin
 r0 : register16bits port map (clk => clk, reset => reset, wr_en => r0_en, data_in => inData, data_out => outS0Data);
