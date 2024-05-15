@@ -3,10 +3,10 @@ use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 use ieee.math_real.all;
 
-entity testBenchUP is
+entity processador_tb is
 end entity;
 
-architecture tb of testBenchUP is
+architecture tb of processador_tb is
   component uProcessor is
     port
     (

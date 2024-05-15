@@ -20,7 +20,7 @@ VHDL_SOURCES += rtl/ula.vhd
 VHDL_SOURCES += $(wildcard rtl/*.vhd)
 
 
-TBS = $(wildcard tb/testBench*.vhd)
+TBS = $(wildcard tb/*.vhd)
 
 TB = $(tb)
 
@@ -56,12 +56,12 @@ elaborate: analyze
 	$(QUIET)$(CC) -e $(CFLAGS) --workdir=$(WORKDIR) testBenchRegister
 	$(QUIET)$(CC) -e $(CFLAGS) --workdir=$(WORKDIR) testBenchRegBank
 #	$(QUIET)$(CC) -e $(CFLAGS) --workdir=$(WORKDIR) testBenchRBU
-#	$(QUIET)$(CC) -e $(CFLAGS) --workdir=$(WORKDIR) testBenchCU
+#	$(QUIET)$(CC) -e $(CFLAGS) --workdir=$(WORKDIR) testBenchContU
 	$(QUIET)$(CC) -e $(CFLAGS) --workdir=$(WORKDIR) testBenchSM
 	$(QUIET)$(CC) -e $(CFLAGS) --workdir=$(WORKDIR) testBenchRom
 	$(QUIET)$(CC) -e $(CFLAGS) --workdir=$(WORKDIR) testBenchPC
 #	$(QUIET)$(CC) -e $(CFLAGS) --workdir=$(WORKDIR) testBenchPCCUTL
-	$(QUIET)$(CC) -e $(CFLAGS) --workdir=$(WORKDIR) testBenchUP
+	$(QUIET)$(CC) -e $(CFLAGS) --workdir=$(WORKDIR) processador_tb
 
 .PHONY: simulate
 simulate: elaborate
