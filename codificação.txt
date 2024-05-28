@@ -22,7 +22,7 @@ subi:
     0100_CCCCCCCCCCCC
 
 mov:
-    1010_DDD_CCCCCCCCC
+    1010_DDD_XXXXXXXXX
 
 mova:
     1011_SSS_XXXXXXXXX
@@ -59,3 +59,6 @@ opcode:  operação:
 1010     mov
 1011     mova
 1100     jump (absoluto)
+1101     BEQ  (relativo) a == b ->flag zero  dá 1
+1110     BLT  (relativo) a < b  ->flag carry dá 1
+1111     inválido

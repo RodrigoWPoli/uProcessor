@@ -8,6 +8,7 @@ entity control_unit is
   (
     instr                                                                       : in unsigned(15 downto 0);
     state                                                                       : in unsigned(1 downto 0);
+    zero, carry                                                                 : in std_logic;
     jump_en, rb_wr_en, a_wr_en, aluSrc, loadSrc, loadASrc, invalidOpcode, UorRB : out std_logic;
     rb_in_sel, rb_out_sel                                                       : out unsigned(2 downto 0);
     aluOp                                                                       : out unsigned(1 downto 0);
@@ -79,7 +80,7 @@ begin
     opcode = "0101" else --cmpi
     "0000000000000000";
 
-  jump_addr <= instr_s(11 downto 5) when opcode = "1100" else 
+  jump_addr <= instr_s(11 downto 5) when opcode = "1100" else
     "0000000";
 
   invalidOpcode <= '1' when opcode = "1101" or
