@@ -1,7 +1,6 @@
 ld r3 0
 ld r4 0
-lda 0
-add r3
+mova r3
 add r4
 mov r4
 lda 1
@@ -9,6 +8,6 @@ add r3
 mov r3
 lda 30
 cmpi r3
-blt -10
+blt -9
 mova r4
 mov r5
