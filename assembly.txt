@@ -1,25 +1,14 @@
-ld R3 5 
-ld R4 8 
-mova R3  
-add R4
-addi 15   
-mov R5   
-lda 1    
-sub R5   
-mov R5   
-jump 20  
-ld R5 0 
-nop
-nop
-nop
-nop
-nop
-nop
-nop
-nop
-nop
-nop
-mova R5  
-mov R3   
-jump 2   
-ld R3 0 
+ld r3 0
+ld r4 0
+lda 0
+add r3
+add r4
+mov r4
+lda 1
+add r3
+mov r3
+lda 30
+cmpi r3
+blt -10
+mova r4
+mov r5
