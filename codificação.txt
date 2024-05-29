@@ -9,20 +9,20 @@ add:
 addi: 
     0010_CCCCCCCCCCCC
 
-ld: 
-    0110_DDD_CCCCCCCCC
-
-lda: 
-    0111_CCCCCCCCCCCC
-
 sub:
     0011_SSS_XXXXXXXXX
 
 subi: 
     0100_CCCCCCCCCCCC
 
+ld: 
+    0110_DDD_CCCCCCCCC
+
+lda: 
+    0111_CCCCCCCCCCCC
+
 mov:
-    1010_DDD_CCCCCCCCC
+    1010_DDD_XXXXXXXXX
 
 mova:
     1011_SSS_XXXXXXXXX
