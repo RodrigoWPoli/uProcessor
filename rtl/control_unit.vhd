@@ -6,13 +6,15 @@ use ieee.math_real.all;
 entity control_unit is
   port
   (
-    instr                                                                       : in unsigned(15 downto 0);
-    state                                                                       : in unsigned(1 downto 0);
-    jump_en, rb_wr_en, a_wr_en, aluSrc, loadSrc, loadASrc, invalidOpcode, UorRB : out std_logic;
-    rb_in_sel, rb_out_sel                                                       : out unsigned(2 downto 0);
-    aluOp                                                                       : out unsigned(1 downto 0);
-    jump_addr                                                                   : out unsigned(6 downto 0);
-    imm                                                                         : out unsigned(15 downto 0)
+    instr       : in unsigned(15 downto 0);
+    state       : in unsigned(1 downto 0);
+    zero, carry : in std_logic;
+    jump_en, rb_wr_en, a_wr_en, aluSrc, loadSrc,
+    loadASrc, invalidOpcode, UorRB, br_en, rf_en : out std_logic;
+    rb_in_sel, rb_out_sel                        : out unsigned(2 downto 0);
+    aluOp                                        : out unsigned(1 downto 0);
+    jump_addr, br_addr                           : out unsigned(6 downto 0);
+    imm                                          : out unsigned(15 downto 0)
   );
 end entity;
 
@@ -24,6 +26,7 @@ begin
     "0000000000000000";
   opcode <= instr_s(15 downto 12);
   --escrita no acumulador
+  rf_en <= '1' when state = "10" else '0';
   a_wr_en <= '1' when opcode = "0001" or --add
     opcode = "0010" or --addi
     opcode = "0011" or --sub
@@ -39,8 +42,7 @@ begin
     '0';
   -- qual input da ula (cte ou rb)
   aluSrc <= '0' when opcode = "0010" or --addi
-    opcode = "0100" or --subi
-    opcode = "0101" else --cmpi
+    opcode = "0100" else --subi
     '1';
   --qual dado escrever no rb
   loadSrc <= '1' when opcode = "1010" else --mov
@@ -58,7 +60,8 @@ begin
     opcode = "0011" or --sub
     opcode = "1011" or --mova
     opcode = "1000" or --or
-    opcode = "1001" else --mult
+    opcode = "1001" or --mult
+    opcode = "0101" else --cmpi
     "000";
   rb_in_sel <= instr_s(11 downto 9) when opcode = "1010" or --mov
     opcode = "0110" else --ld
@@ -75,15 +78,17 @@ begin
   imm <= "0000000" & instr_s(8 downto 0) when opcode = "0110" else --ld
     "00000" & instr_s(10 downto 0) when opcode = "0111" else --lda
     "0000" & instr_s(11 downto 0) when opcode = "0010" or --addi
-    opcode = "0100" or --subi
-    opcode = "0101" else --cmpi
+    opcode = "0100" else--subi
     "0000000000000000";
 
-  jump_addr <= instr_s(11 downto 5) when opcode = "1100" else 
+  jump_addr <= instr_s(11 downto 5) when opcode = "1100" else
     "0000000";
-
-  invalidOpcode <= '1' when opcode = "1101" or
-    opcode = "1110" or
-    opcode = "1111" else
+  br_en <= '1' when (opcode = "1101" and zero = '1') else --beq
+    '1' when (opcode = "1110" and carry = '1') else --blt
+    '0';
+  br_addr <= instr_s(11 downto 5) when opcode = "1101" and zero = '1' else --beq
+    instr_s(11 downto 5) when opcode = "1110" and carry = '1' else --blt
+    "0000000";
+  invalidOpcode <= '1' when opcode = "1111" else
     '0';
 end architecture;

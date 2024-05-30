@@ -5,6 +5,7 @@ CC = ghdl
 SIM = gtkwave
 WORKDIR = debug
 WAVEDIR = wave
+ASSEMBLER = assembler.rb
 QUIET = @ #remove '@' if you want the commands to show in terminal
 
 tb?= testBench
@@ -40,7 +41,6 @@ elaborate: analyze
 	@echo ">>> sources..."
 	$(QUIET)mkdir -p $(WORKDIR)
 	$(QUIET)$(CC) -e $(CFLAGS) --workdir=$(WORKDIR) mux2
-	$(QUIET)$(CC) -e $(CFLAGS) --workdir=$(WORKDIR) mux2sevenBits
 	$(QUIET)$(CC) -e $(CFLAGS) --workdir=$(WORKDIR) register16bits
 	$(QUIET)$(CC) -e $(CFLAGS) --workdir=$(WORKDIR) ula
 	$(QUIET)$(CC) -e $(CFLAGS) --workdir=$(WORKDIR) registerBank
@@ -80,3 +80,8 @@ clean:
 	$(QUIET)rm -f $(WAVEDIR)/*
 	$(QUIET)rm -rf $(WAVEDIR)
 	@echo ">>> done..."
+
+.PHONY: assemble
+assemble:
+	@echo ">>> making rom..."
+	$(QUIET)ruby $(ASSEMBLER)

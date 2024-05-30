@@ -28,7 +28,7 @@ mova:
     1011_SSS_XXXXXXXXX
 
 cmpi:
-    0101_CCCCCCCCCCCC
+    0101_SSS_XXXXXXXXX
 
 or:
     1000_SSS_XXXXXXXXX
@@ -38,6 +38,10 @@ mult:
 
 jump:
     1100_AAAAAAA_XXXXX
+BEQ:
+    1101_AAAAAAA_XXXXX
+BLT:
+    1110_AAAAAAA_XXXXX
 
 X: irrelevante
 D: registrador destino
@@ -51,7 +55,7 @@ opcode:  operação:
 0010     addi
 0011     sub
 0100     subi
-0101     cmpi (compara com constante)
+0101     cmpi (compara com registrador)
 0110     ld
 0111     lda
 1000     OR
@@ -59,3 +63,6 @@ opcode:  operação:
 1010     mov
 1011     mova
 1100     jump (absoluto)
+1101     BEQ  (relativo) a == b ->flag zero  dá 1
+1110     BLT  (relativo) a < b  ->flag carry dá 1
+1111     inválido
