@@ -5,7 +5,7 @@ CC = ghdl
 SIM = gtkwave
 WORKDIR = debug
 WAVEDIR = wave
-ASSEMBLER = assembler.rb
+ASSEMBLER = assembler.py
 QUIET = @ #remove '@' if you want the commands to show in terminal
 
 tb?= testBench
@@ -84,4 +84,4 @@ clean:
 .PHONY: assemble
 assemble:
 	@echo ">>> making rom..."
-	$(QUIET)ruby $(ASSEMBLER)
+	$(QUIET)python3.13 $(ASSEMBLER)

@@ -21,8 +21,8 @@ cmpi:
 ld: 
     0110_DDD_RCCCCCCCC -- R: 1 para A e 0 para Registradores
 
-lda: 
-    0111_CCCCCCCCCCCC
+lw: 
+    0111_DDD_AAAAAAA_XX
 
 or:
     1000_SSS_XXXXXXXXX
@@ -32,8 +32,8 @@ mult:
 
 mov:
     1010_DDD_RXXXXXXXX -- R: 1 para A e 0 para Registradores
-
-
+sw:
+    1011_SSS_AAAAAAA_XX
 jump:
     1100_AAAAAAA_XXXXX
 BEQ:
