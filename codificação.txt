@@ -15,26 +15,24 @@ sub:
 subi: 
     0100_CCCCCCCCCCCC
 
+cmpi:
+    0101_SSS_XXXXXXXXX
+
 ld: 
-    0110_DDD_CCCCCCCCC
+    0110_DDD_RCCCCCCCC -- R: 1 para A e 0 para Registradores
 
 lda: 
     0111_CCCCCCCCCCCC
-
-mov:
-    1010_DDD_XXXXXXXXX
-
-mova:
-    1011_SSS_XXXXXXXXX
-
-cmpi:
-    0101_SSS_XXXXXXXXX
 
 or:
     1000_SSS_XXXXXXXXX
 
 mult:
     1001_SSS_XXXXXXXXX
+
+mov:
+    1010_DDD_RXXXXXXXX -- R: 1 para A e 0 para Registradores
+
 
 jump:
     1100_AAAAAAA_XXXXX
@@ -48,6 +46,7 @@ D: registrador destino
 S: registrador fonte
 C: constante
 A: endereço
+R: acumulador ou registrador
 
 opcode:  operação:
 0000     nop
@@ -55,13 +54,13 @@ opcode:  operação:
 0010     addi
 0011     sub
 0100     subi
-0101     cmpi (compara com registrador)
+0101     cmp (compara com registrador)
 0110     ld
 0111     lda
 1000     OR
 1001     mult
 1010     mov
-1011     mova
+1011     open
 1100     jump (absoluto)
 1101     BEQ  (relativo) a == b ->flag zero  dá 1
 1110     BLT  (relativo) a < b  ->flag carry dá 1
