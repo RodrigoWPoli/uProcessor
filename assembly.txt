@@ -1,13 +1,13 @@
 ld r3 0
 ld r4 0
-mova r3
+mov a r3
 add r4
 mov r4
-lda 1
+ld a 1
 add r3
 mov r3
-lda 30
-cmpi r3
+ld a 30
+cmp r3
 blt -9
-mova r4
+mov a r4
 mov r5

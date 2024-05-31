@@ -108,11 +108,11 @@ architecture rtl of uProcessor is
       zero_out, carry_out : out std_logic
     );
   end component;
-  signal aluOut, aluInA, aluInB, rbOut, rbInData, imm, instr, aData, aDataAux : unsigned(15 downto 0) := "0000000000000000";
-  signal pc_out, pc_in, jump_addr, br_addr                                    : unsigned(6 downto 0)  := "0000000";
-  signal rb_in_sel, rb_out_sel                                                : unsigned(2 downto 0)  := "000";
-  signal aluOp, state                                                         : unsigned(1 downto 0)  := "00";
-  signal rb_wr_en, zero, carry, aluSrc, loadASrc, loadSrc, a_wr_en,
+  signal aluOut, aluInA, aluInB, rbOut, rbInData, imm, instr, aData, aDataAux, instr_out : unsigned(15 downto 0) := "0000000000000000";
+  signal pc_out, pc_in, jump_addr, br_addr                                               : unsigned(6 downto 0)  := "0000000";
+  signal rb_in_sel, rb_out_sel                                                           : unsigned(2 downto 0)  := "000";
+  signal aluOp, state                                                                    : unsigned(1 downto 0)  := "00";
+  signal rb_wr_en, zero, carry, aluSrc, loadASrc, loadSrc, a_wr_en, instr_en,
   pc_en, jump_en, opcodeException, UorRB, br_en, carry_out, zero_out, rf_en : std_logic := '0';
 begin
   flag_register : registerFlags port map
@@ -181,6 +181,15 @@ begin
   data_in  => aData,
   data_out => aluInB
   );
+  
+  intr_register : register16bits port
+  map (
+  clk      => clk,
+  reset    => reset,
+  wr_en    => instr_en,
+  data_in  => instr,
+  data_out => instr_out
+  );
   pcreg : programCounter
   port
   map
@@ -216,7 +225,7 @@ begin
   controlUnit : control_unit port
   map
   (
-  instr         => instr,
+  instr         => instr_out,
   jump_en       => jump_en,
   rb_wr_en      => rb_wr_en,
   a_wr_en       => a_wr_en,
@@ -238,6 +247,7 @@ begin
   br_en         => br_en
   );
   -- state: 00 fetch, 01 decode, 10 execute
-  pc_en <= '1' when state = "01" or jump_en = '1' or br_en = '1' else
+  instr_en <= '1' when state = "01" else '0';
+  pc_en <= '1' when state = "00" or jump_en = '1' or br_en = '1' else
     '0';
 end architecture;
