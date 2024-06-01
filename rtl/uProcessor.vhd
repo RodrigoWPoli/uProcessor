@@ -6,8 +6,9 @@ use ieee.math_real.all;
 entity uProcessor is
   port
   (
-    clk   : in std_logic;
-    reset : in std_logic
+    clk_in       : in std_logic;
+    reset     : in std_logic;
+    exception : out std_logic
   );
 end entity;
 
@@ -85,6 +86,13 @@ architecture rtl of uProcessor is
       output     : out unsigned(15 downto 0)
     );
   end component;
+  component mux2bit is
+    port
+    (
+      src, in_0, in_1 : in std_logic;
+      output          : out std_logic
+    );
+  end component;
   component mux3 is
     port
     (
@@ -125,15 +133,32 @@ architecture rtl of uProcessor is
       rf_en, zero, carry  : in std_logic;
       zero_out, carry_out : out std_logic
     );
+    end component;
+    component register1bit is
+      port (
+        clk   : in std_logic;
+        reset : in std_logic;
+        wr_en: in std_logic;
+        data_in  : in std_logic;
+        data_out : out std_logic
+    );
   end component;
   signal aluOut, aluInA, aluInB, rbOut,
   rbInData, imm, instr, aData, aDataAux, instr_out, ram_data_out : unsigned(15 downto 0) := "0000000000000000";
   signal pc_out, pc_in, jump_addr, br_addr, ram_addr             : unsigned(6 downto 0)  := "0000000";
   signal rb_in_sel, rb_out_sel                                   : unsigned(2 downto 0)  := "000";
   signal aluOp, state, loadASrc, loadSrc                         : unsigned(1 downto 0)  := "00";
-  signal rb_wr_en, zero, carry, aluSrc, a_wr_en, instr_en, ram_wr_en,
+  signal rb_wr_en, zero, carry, aluSrc, a_wr_en, instr_en, ram_wr_en, sm_reset, exception_s, clk,
   pc_en, jump_en, opcodeException, br_en, carry_out, zero_out, rf_en : std_logic := '0';
 begin
+  exceptionRegister : register1bit port map
+  (
+    clk      => clk,
+    reset    => reset,
+    wr_en    => '1',
+    data_in  => opcodeException,
+    data_out => exception_s
+  );
   flag_register : registerFlags port map
   (
     clk       => clk,
@@ -170,6 +195,13 @@ begin
   in_1   => rbOut,
   src    => aluSrc,
   output => aluInA
+  );
+  smMux : mux2bit port
+  map (
+  in_0   => clk_in,
+  in_1   => '0',
+  src    => exception_s,
+  output => clk
   );
   rbSrcMux : mux3 port
   map (
@@ -274,4 +306,5 @@ begin
     '0';
   pc_en <= '1' when state = "00" or jump_en = '1' or br_en = '1' else
     '0';
+  exception <= exception_s;
 end architecture;

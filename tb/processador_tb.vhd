@@ -10,21 +10,27 @@ architecture tb of processador_tb is
   component uProcessor is
     port
     (
-      clk   : in std_logic;
-      reset : in std_logic
+      clk_in    : in std_logic;
+      reset     : in std_logic;
+      exception : out std_logic
     );
   end component;
-  signal clk, reset    : std_logic :='0';
-  signal finished      : std_logic := '0';
-  constant period_time : time      := 100 ns;
+  signal clk, reset, exception : std_logic := '0';
+  signal finished              : std_logic := '0';
+  constant period_time         : time      := 100 ns;
 begin
   uut : uProcessor port map
   (
-    clk   => clk,
-    reset => reset
+    clk_in    => clk,
+    reset     => reset,
+    exception => exception
   );
   reset_global : process
   begin
+    reset <= '1';
+    wait for period_time * 2;
+    reset <= '0';
+    wait for period_time * 30;
     reset <= '1';
     wait for period_time * 2;
     reset <= '0';
@@ -48,5 +54,5 @@ begin
     end loop;
     wait;
   end process clk_proc;
-  
+
 end architecture;
