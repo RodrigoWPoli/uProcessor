@@ -1,0 +1,52 @@
+Name: uProcessor
+Version: 7.1
+
+
+1. Instruções:
+nop           -> pula o endereço
+add RS        -> adiciona o valor do registrador ao acumulador
+addi cte      -> adiciona o valor de uma constante imediata ao acumulador
+sub  RS       -> subtrai o valor do registrador ao acumulador
+subi cte      -> subtrai o valor do registrador ao acumulador
+cmp  RS       -> compara o valor de um registrador com o do acumulador (registrador - acumulador = ativa a flag carry se for negativo e zero se for igual)
+ld A/RD cte   -> carrega uma constante imediata a um registrador (RD) ou acumulador (A)
+OR   RS       -> faz a comparação or entre um registrador e o acumulador
+mult RS       -> multiplica o valor do registrador ao acumulador
+mov A/_ RD/RS -> move o valor de um registrador ao acumulador e vice-versa
+jump  addr    -> pula absolutamente a um endereço
+BEQ   addr    -> pula relativamente a um endereço quando a flag de zero estiver ativa (comparação entre 2 valores for igual no endereço imediatamente anterior)
+BLT   addr    -> pula relativamente a um endereço quando a flag de carry estiver ativa (comparação entre 2 valores for negativa no endereço imediatamente anterior)
+lw RD addr    -> carrega o valor de um endereço da ram a um registrador
+sw RS addr    -> armazena o valor de um registrador num endereço da ram
+
+2. Requisito:
+Ter ghdl, gtkwave e python3.13 instalados
+
+3. Utilização:
+Foi utilizado um makefile para facilitar a análise e elaboração dos símbolos. Seus comandos são:
+Make: roda tudo
+make assemble: compila o código de assembly.txt direto na rom
+Make clean: limpa o ghw e o work
+make analize: faz o ghdl -a
+make elaborate: faz o ghdl -e
+make simulate tb=nome_do_teste
+Digitar o código desejado em assembly.txt e depois rodar make.
+
+
+4. Commandos:
+
+teste da ram:
+ld r0 3
+ld r1 7
+ld r2 13
+ld r3 16
+ld r3 21
+ld r4 28
+ld r5 40
+ld r6 100
+ld r7 -110
+sw r3 15
+lw r0 15
+sw r1 30
+sw r7 50
+lw r6 15

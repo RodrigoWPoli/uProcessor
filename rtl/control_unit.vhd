@@ -2,44 +2,43 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 use ieee.math_real.all;
-
 entity control_unit is
   port
   (
     instr       : in unsigned(15 downto 0);
     state       : in unsigned(1 downto 0);
     zero, carry : in std_logic;
-    jump_en, rb_wr_en, a_wr_en, aluSrc, loadSrc,
-    loadASrc, invalidOpcode, UorRB, br_en, rf_en : out std_logic;
-    rb_in_sel, rb_out_sel                        : out unsigned(2 downto 0);
-    aluOp                                        : out unsigned(1 downto 0);
-    jump_addr, br_addr                           : out unsigned(6 downto 0);
-    imm                                          : out unsigned(15 downto 0)
+    jump_en, rb_wr_en, a_wr_en, aluSrc, ram_wr_en,
+    invalidOpcode, br_en, rf_en  : out std_logic;
+    rb_in_sel, rb_out_sel        : out unsigned(2 downto 0);
+    aluOp, loadASrc, loadSrc     : out unsigned(1 downto 0);
+    jump_addr, br_addr, ram_addr : out unsigned(6 downto 0);
+    imm                          : out unsigned(15 downto 0)
   );
 end entity;
 
 architecture rtl of control_unit is
-  signal opcode      : unsigned(3 downto 0) := "0000";
-  constant add       : unsigned(3 downto 0) := "0001";
-  constant addi      : unsigned(3 downto 0) := "0010";
-  constant sub       : unsigned(3 downto 0) := "0011";
-  constant subi      : unsigned(3 downto 0) := "0100";
-  constant cmp       : unsigned(3 downto 0) := "0101";
-  constant ld        : unsigned(3 downto 0) := "0110";-- instr(8) = '0' for ld, '1' for lda
-  constant open_var2 : unsigned(3 downto 0) := "0111";
-  constant or_op     : unsigned(3 downto 0) := "1000";
-  constant mult      : unsigned(3 downto 0) := "1001";
-  constant mov       : unsigned(3 downto 0) := "1010";
-  constant open_var  : unsigned(3 downto 0) := "1011";
-  constant jump      : unsigned(3 downto 0) := "1100";
-  constant beq       : unsigned(3 downto 0) := "1101";
-  constant blt       : unsigned(3 downto 0) := "1110";
-  constant invalid   : unsigned(3 downto 0) := "1111";
+  signal opcode    : unsigned(3 downto 0) := "0000";
+  constant add     : unsigned(3 downto 0) := "0001";
+  constant addi    : unsigned(3 downto 0) := "0010";
+  constant sub     : unsigned(3 downto 0) := "0011";
+  constant subi    : unsigned(3 downto 0) := "0100";
+  constant cmp     : unsigned(3 downto 0) := "0101";
+  constant ld      : unsigned(3 downto 0) := "0110";-- instr(8) = '0' for ld, '1' for lda
+  constant lw      : unsigned(3 downto 0) := "0111";
+  constant or_op   : unsigned(3 downto 0) := "1000";
+  constant mult    : unsigned(3 downto 0) := "1001";
+  constant mov     : unsigned(3 downto 0) := "1010";
+  constant sw      : unsigned(3 downto 0) := "1011";
+  constant jump    : unsigned(3 downto 0) := "1100";
+  constant beq     : unsigned(3 downto 0) := "1101";
+  constant blt     : unsigned(3 downto 0) := "1110";
+  constant invalid : unsigned(3 downto 0) := "1111";
 begin
   opcode <= instr(15 downto 12);
-  --escrita no acumulador
-  rf_en <= '1' when state = "10" else
+  rf_en  <= '1' when state = "10" else
     '0';
+  --escrita no acumulador
   a_wr_en <= '1' when opcode = add and state = "10" else
     '1' when opcode = addi and state = "10" else
     '1' when opcode = sub and state = "10" else
@@ -52,47 +51,61 @@ begin
   --escrita nos registradores
   rb_wr_en <= '1' when opcode = ld and state = "10" and instr(8) = '0' else
     '1' when opcode = mov and state = "10" and instr(8) = '0' else
+    '1' when opcode = lw else
+    '0';
+  ram_wr_en <= '1' when opcode = sw else
     '0';
   -- qual input da ula (cte ou rb)
-  aluSrc <= '0' when opcode = addi or --addi
-    opcode = subi else --subi
+  aluSrc <= '0' when opcode = addi or
+    opcode = subi else
     '1';
   --qual dado escrever no rb
-  loadSrc <= '1' when opcode = mov and instr(8) = '0' else --mov
-    '0';
+  loadSrc <= "01" when opcode = mov and instr(8) = '0' else --mov
+    "10" when opcode = lw else
+    "00"; --imm
   --qual dado escrever no acumulador
-  loadASrc <= '0' when opcode = ld and instr(8) = '1' else --lda
-    '1';--vem do mux abaixo
-  UorRB <= '0' when opcode = mov and instr(8) = '1' else --mova
-    '1';--sempre da ula
+  loadASrc <= "00" when opcode = ld and instr(8) = '1' else --lda
+    "01" when opcode = mov and instr(8) = '1' else
+    "10";
   --ativar jump
-  jump_en <= '1' when opcode = jump else --jmp
+  jump_en <= '1' when opcode = jump else
     '0';
 
-  rb_out_sel <= instr(11 downto 9) when opcode = add or --add 
-    opcode = sub or --sub
-    opcode = or_op or --or
-    opcode = mult or --mult
-    opcode = cmp else --cmpi
+  ram_addr <= instr(8 downto 2) when opcode = lw or
+    opcode = sw else
+    "0000000";
+  rb_out_sel <= instr(11 downto 9) when opcode = add or
+    opcode = sub or
+    opcode = or_op or
+    opcode = mult or
+    opcode = cmp or
+    opcode = sw else
     instr(11 downto 9) when opcode = mov and instr(8) = '1' else --mova
     "000";
 
   rb_in_sel <= instr(11 downto 9) when opcode = mov and instr(8) = '0' else --mov
     instr(11 downto 9) when opcode = ld and instr(8) = '0' else --ld
+    instr(11 downto 9) when opcode = lw else
     "000";
-  aluOp <= "00" when opcode = add or --add
-    opcode = addi else --addi
-    "01" when opcode = sub or --sub
-    opcode = subi or --subi
-    opcode = cmp else --cmpi
-    "10" when opcode = or_op else --or
-    "11" when opcode = mult else --mult
+  aluOp <= "00" when opcode = add or
+    opcode = addi else
+    "01" when opcode = sub or
+    opcode = subi or
+    opcode = cmp else
+    "10" when opcode = or_op else
+    "11" when opcode = mult else
     "00";
 
-  imm <= "00000000" & instr(7 downto 0) when opcode = ld and instr(8) = '0' else --ld
-    "00000000" & instr(7 downto 0) when opcode = ld and instr(8) = '1' else --lda
-    "0000" & instr(11 downto 0) when opcode = addi or --addi
-    opcode = subi else--subi
+  imm <= "00000000" & instr(7 downto 0) when opcode = ld and instr(8) = '0' and instr(7) = '0' else --ld
+    "00000000" & instr(7 downto 0) when opcode = ld and instr(8) = '1' and instr(7) = '0' else --lda
+    "0000" & instr(11 downto 0) when opcode = addi and instr(11) = '0' else
+    "0000" & instr(11 downto 0) when opcode = subi and instr(11) = '0' else
+    --==============negatives================
+    "11111111" & instr(7 downto 0) when opcode = ld and instr(8) = '0' and instr(7) = '1' else
+    "11111111" & instr(7 downto 0) when opcode = ld and instr(8) = '1' and instr(7) = '1' else
+    "1111" & instr(11 downto 0) when opcode = addi and instr(11) = '1' else
+    "1111" & instr(11 downto 0) when opcode = subi and instr(11) = '1' else
+    --======================================
     "0000000000000000";
 
   jump_addr <= instr(11 downto 5) when opcode = jump else

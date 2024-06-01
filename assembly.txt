@@ -1,13 +1,14 @@
-ld r3 0
-ld r4 0
-mov a r3
-add r4
-mov r4
-ld a 1
-add r3
-mov r3
-ld a 30
-cmp r3
-blt -9
-mov a r4
-mov r5
+ld r0 3
+ld r1 7
+ld r2 13
+ld r3 16
+ld r3 21
+ld r4 28
+ld r5 40
+ld r6 100
+ld r7 -110
+sw r3 15
+lw r0 15
+sw r1 30
+sw r7 50
+lw r6 15

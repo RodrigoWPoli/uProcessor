@@ -19,10 +19,10 @@ cmpi:
     0101_SSS_XXXXXXXXX
 
 ld: 
-    0110_DDD_RCCCCCCCC -- R: 1 para A e 0 para Registradores
+    0110_DDD_RCCCCCCCC
 
-lda: 
-    0111_CCCCCCCCCCCC
+lw: 
+    0111_DDD_AAAAAAA_XX
 
 or:
     1000_SSS_XXXXXXXXX
@@ -31,9 +31,10 @@ mult:
     1001_SSS_XXXXXXXXX
 
 mov:
-    1010_DDD_RXXXXXXXX -- R: 1 para A e 0 para Registradores
+    1010_DDD_RXXXXXXXX
 
-
+sw:
+    1011_SSS_AAAAAAA_XX
 jump:
     1100_AAAAAAA_XXXXX
 BEQ:
@@ -46,7 +47,7 @@ D: registrador destino
 S: registrador fonte
 C: constante
 A: endereço
-R: acumulador ou registrador
+R: acumulador ou registrador: 1 para A e 0 para Registradores
 
 opcode:  operação:
 0000     nop
