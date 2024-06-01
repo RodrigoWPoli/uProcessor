@@ -46,16 +46,20 @@ def nop(*args):
 
 def orx(line):
     valid_line(line, 2)
-    instr = ''.join([OPCODES[word] if i == 0 else REGISTERS[word] for i, word in enumerate(line.split())])
+    words = line.split()
+    check_register(words[1])
+    instr = ''.join([OPCODES[word] if i == 0 else REGISTERS[word] for i, word in enumerate(words)])
     return instr + '000000000'
 
 def oimm(line):
     valid_line(line, 2)
-    check_max_value(int(line.split()[1]), 12)
-    return ''.join([OPCODES[word] if i == 0 else to_signed_binary(int(word), 12) for i, word in enumerate(line.split())])
+    words = line.split()
+    check_max_value(int(words[1]), 12)
+    return ''.join([OPCODES[word] if i == 0 else to_signed_binary(int(word), 12) for i, word in enumerate(words)])
 
 def mov(line):
     words = line.split()
+    check_register(words[1])
     if words[1].lower() == 'a':
         valid_line(line, 3)
         instr = ''.join([OPCODES[word] if i == 0 else REGISTERS[word] for i, word in enumerate(words) if i != 1])
@@ -69,6 +73,7 @@ def ld(line):
     valid_line(line, 3)
     check_max_value(int(line.split()[2]), 8)
     words = line.split()
+    check_register(words[1])
     if words[1].lower() == 'a':
         return ''.join([OPCODES[word] if i == 0 else '000' if i == 1 else '1' + to_signed_binary(int(word), 8) for i, word in enumerate(words)])
     else:
@@ -76,12 +81,14 @@ def ld(line):
 
 def jump(line):
     valid_line(line, 2)
-    check_max_value(int(line.split()[1]), 7)
-    instr = ''.join([OPCODES[word] if i == 0 else to_signed_binary(int(word), 7) for i, word in enumerate(line.split())])
+    words = line.split()
+    check_max_value(int(words[1]), 7)
+    instr = ''.join([OPCODES[word] if i == 0 else to_signed_binary(int(word), 7) for i, word in enumerate(words)])
     return instr + '00000'
 
 def ram(line):
     valid_line(line, 3)
+    check_register(line.split()[1])
     check_max_value(int(line.split()[2]), 7)
     instr = ''.join([OPCODES[word] if i == 0 else REGISTERS[word] if i == 1 else to_signed_binary(int(word), 7) for i, word in enumerate(line.split())])
     return instr + '00'
@@ -99,23 +106,10 @@ def check_max_value(value, bits):
     min_value = -2**(bits - 1)
     if value > max_value or value < min_value:
         raise ValueError(f"Error: Value {value} is outside the range of {bits} bits for signed integers: {min_value} to {max_value}")
-
-
-def compile_to_machine_code(file_name):
-    code = []
-    previous_instruction = None
-    with open(file_name, 'r') as f:
-        for i, line in enumerate(f):
-            line = line.strip()
-            if not line:
-                continue
-            print(line.lower())
-            opcode = line.split()[0].lower()
-            if cmp_valid(opcode, previous_instruction):
-                raise ValueError(f"Error at line {i + 1}: {opcode} instruction without a preceding cmp instruction")
-            code.append(process_opcode(opcode, line.lower()))
-            previous_instruction = opcode
-    return code
+    
+def check_register(register):
+    if register not in REGISTERS:
+        raise ValueError(f"Error: Invalid register {register}")
 
 def process_opcode(opcode, line):
     match opcode:
@@ -136,14 +130,53 @@ def process_opcode(opcode, line):
         case _:
             raise ValueError(f"Error: Invalid opcode {opcode}")
 
-def generate_rom_constant(code):
-    print('rom constant:')
-    print('constant rom_content : mem := (')
-    for i, binary in enumerate(code):
-        print(f"\t{i} => \"{binary}\",")
-    print("\tothers => (others => '0')")
-    print(');')
+def compile(file_name):
+    code = []
+    previous_instruction = None
+    with open(file_name, 'r') as f:
+        for i, line in enumerate(f):
+            line = line.strip()
+            if not line:
+                continue
+            opcode = line.split()[0].lower()
+            if cmp_valid(opcode, previous_instruction):
+                raise ValueError(f"Error at line {i + 1}: {opcode} instruction without a preceding cmp instruction")
+            code.append(process_opcode(opcode, line.lower()))
+            previous_instruction = opcode
+    return code
+
+    
+def save_to_rom(code, filename='rtl/rom.vhd'):
+    with open(filename, 'w') as f:
+        f.write('library ieee;\n')
+        f.write('use ieee.std_logic_1164.all;\n')
+        f.write('use ieee.numeric_std.all;\n')
+        f.write('entity rom is\n')
+        f.write('  port\n')
+        f.write('  (\n')
+        f.write('    clk     : in std_logic;\n')
+        f.write('    address : in unsigned(6 downto 0);\n')
+        f.write('    data    : out unsigned(15 downto 0)\n')
+        f.write('  );\n')
+        f.write('end entity;\n')
+        f.write('architecture rtl of rom is\n')
+        f.write('  type mem is array (0 to 127) of unsigned(15 downto 0);\n')
+        f.write('  constant rom_content : mem := (\n')
+        
+        for i, binary in enumerate(code):
+            f.write(f'        {i} => "{binary}",\n')
+
+        f.write('        others => (others => \'0\')\n')
+        f.write('  );\n')
+        f.write('begin\n')
+        f.write('  process (clk)\n')
+        f.write('  begin\n')
+        f.write('    if (rising_edge(clk)) then\n')
+        f.write('      data <= rom_content(to_integer(address));\n')
+        f.write('    end if;\n')
+        f.write('  end process;\n')
+        f.write('end architecture;\n')
 
 if __name__ == "__main__":
-    code = compile_to_machine_code('assembly.txt')
-    generate_rom_constant(code)
+    code = compile('assembly.txt')
+    save_to_rom(code)

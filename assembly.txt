@@ -8,4 +8,7 @@ ld r5 40
 ld r6 100
 ld r7 -110
 sw r3 15
-lw r3 15
+lw r0 15
+sw r1 30
+sw r7 50
+lw r6 15

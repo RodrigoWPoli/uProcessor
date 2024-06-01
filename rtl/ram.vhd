@@ -14,7 +14,7 @@ end entity;
 ------------------------------------------------------------------------
 architecture rtl of ram is
    type mem is array (0 to 127) of unsigned(15 downto 0);
-   signal ram_content : mem;
+   signal ram_content : mem:= (others => (others => '0'));
 begin
    process(clk,wr_en)
    begin
