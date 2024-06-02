@@ -42,7 +42,7 @@ elaborate: analyze
 	@echo ">>> sources..."
 	$(QUIET)mkdir -p $(WORKDIR)
 	$(QUIET)$(CC) -e $(CFLAGS) --workdir=$(WORKDIR) mux2
-	$(QUIET)$(CC) -e $(CFLAGS) --workdir=$(WORKDIR) mux3
+	$(QUIET)$(CC) -e $(CFLAGS) --workdir=$(WORKDIR) mux4
 	$(QUIET)$(CC) -e $(CFLAGS) --workdir=$(WORKDIR) register16bits
 	$(QUIET)$(CC) -e $(CFLAGS) --workdir=$(WORKDIR) registerFlags
 	$(QUIET)$(CC) -e $(CFLAGS) --workdir=$(WORKDIR) ula

@@ -30,10 +30,6 @@ begin
     reset <= '1';
     wait for period_time * 2;
     reset <= '0';
-    wait for period_time * 30;
-    reset <= '1';
-    wait for period_time * 2;
-    reset <= '0';
     wait;
   end process;
 

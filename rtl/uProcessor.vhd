@@ -6,7 +6,7 @@ use ieee.math_real.all;
 entity uProcessor is
   port
   (
-    clk_in       : in std_logic;
+    clk_in    : in std_logic;
     reset     : in std_logic;
     exception : out std_logic
   );
@@ -93,12 +93,12 @@ architecture rtl of uProcessor is
       output          : out std_logic
     );
   end component;
-  component mux3 is
+  component mux4 is
     port
     (
-      in_0, in_1, in_2 : in unsigned(15 downto 0);
-      mux_src          : in unsigned(1 downto 0);
-      output           : out unsigned(15 downto 0)
+      in_0, in_1, in_2, in_3 : in unsigned(15 downto 0);
+      mux_src                : in unsigned(1 downto 0);
+      output                 : out unsigned(15 downto 0)
     );
   end component;
   component ram is
@@ -117,12 +117,12 @@ architecture rtl of uProcessor is
       instr       : in unsigned(15 downto 0);
       state       : in unsigned(1 downto 0);
       zero, carry : in std_logic;
-      jump_en, rb_wr_en, a_wr_en, aluSrc, ram_wr_en,
-      invalidOpcode, br_en, rf_en  : out std_logic;
-      rb_in_sel, rb_out_sel        : out unsigned(2 downto 0);
-      aluOp, loadASrc, loadSrc     : out unsigned(1 downto 0);
-      jump_addr, br_addr, ram_addr : out unsigned(6 downto 0);
-      imm                          : out unsigned(15 downto 0)
+      jump_en, rb_wr_en, a_wr_en, aluSrc, ram_wr_en, loadSrc,
+      invalidOpcode, br_en, rf_en : out std_logic;
+      rb_in_sel, rb_out_sel       : out unsigned(2 downto 0);
+      aluOp, loadASrc             : out unsigned(1 downto 0);
+      jump_addr, br_addr          : out unsigned(6 downto 0);
+      imm                         : out unsigned(15 downto 0)
     );
   end component;
   component registerFlags is
@@ -133,22 +133,23 @@ architecture rtl of uProcessor is
       rf_en, zero, carry  : in std_logic;
       zero_out, carry_out : out std_logic
     );
-    end component;
-    component register1bit is
-      port (
-        clk   : in std_logic;
-        reset : in std_logic;
-        wr_en: in std_logic;
-        data_in  : in std_logic;
-        data_out : out std_logic
+  end component;
+  component register1bit is
+    port
+    (
+      clk      : in std_logic;
+      reset    : in std_logic;
+      wr_en    : in std_logic;
+      data_in  : in std_logic;
+      data_out : out std_logic
     );
   end component;
   signal aluOut, aluInA, aluInB, rbOut,
   rbInData, imm, instr, aData, aDataAux, instr_out, ram_data_out : unsigned(15 downto 0) := "0000000000000000";
   signal pc_out, pc_in, jump_addr, br_addr, ram_addr             : unsigned(6 downto 0)  := "0000000";
   signal rb_in_sel, rb_out_sel                                   : unsigned(2 downto 0)  := "000";
-  signal aluOp, state, loadASrc, loadSrc                         : unsigned(1 downto 0)  := "00";
-  signal rb_wr_en, zero, carry, aluSrc, a_wr_en, instr_en, ram_wr_en, sm_reset, exception_s, clk,
+  signal aluOp, state, loadASrc                                  : unsigned(1 downto 0)  := "00";
+  signal rb_wr_en, zero, carry, aluSrc, a_wr_en, instr_en, ram_wr_en, sm_reset, exception_s, clk, loadSrc,
   pc_en, jump_en, opcodeException, br_en, carry_out, zero_out, rf_en : std_logic := '0';
 begin
   exceptionRegister : register1bit port map
@@ -159,15 +160,16 @@ begin
     data_in  => opcodeException,
     data_out => exception_s
   );
-  flag_register : registerFlags port map
+  flag_register : registerFlags port
+  map
   (
-    clk       => clk,
-    reset     => reset,
-    rf_en     => rf_en,
-    zero      => zero,
-    carry     => carry,
-    zero_out  => zero_out,
-    carry_out => carry_out
+  clk       => clk,
+  reset     => reset,
+  rf_en     => rf_en,
+  zero      => zero,
+  carry     => carry,
+  zero_out  => zero_out,
+  carry_out => carry_out
   );
   bank : registerBank port
   map
@@ -203,19 +205,19 @@ begin
   src    => exception_s,
   output => clk
   );
-  rbSrcMux : mux3 port
+  rbSrcMux : mux2 port
   map (
-  in_0    => imm,
-  in_1    => aluInB,
-  in_2    => ram_data_out,
-  mux_src => loadSrc,
-  output  => rbInData
+  in_0   => imm,
+  in_1   => aluInB,
+  src    => loadSrc,
+  output => rbInData
   );
-  ASrcMux : mux3 port
+  ASrcMux : mux4 port
   map (
   in_0    => imm,
   in_1    => rbOut,
   in_2    => aluOut,
+  in_3    => ram_data_out,
   mux_src => loadASrc,
   output  => aData
   );
@@ -273,13 +275,13 @@ begin
   clk      => clk,
   address  => ram_addr,
   wr_en    => ram_wr_en,
-  data_in  => rbOut,
+  data_in  => aluInB,
   data_out => ram_data_out
   );
   controlUnit : control_unit port
   map
   (
-  instr         => instr_out,
+  instr         => instr,
   jump_en       => jump_en,
   rb_wr_en      => rb_wr_en,
   a_wr_en       => a_wr_en,
@@ -298,7 +300,6 @@ begin
   br_addr       => br_addr,
   rf_en         => rf_en,
   br_en         => br_en,
-  ram_addr      => ram_addr,
   ram_wr_en     => ram_wr_en
   );
   -- state: 00 fetch, 01 decode, 10 execute
@@ -307,4 +308,6 @@ begin
   pc_en <= '1' when state = "00" or jump_en = '1' or br_en = '1' else
     '0';
   exception <= exception_s;
+  ram_addr  <= rbOut(6 downto 0);
+
 end architecture;

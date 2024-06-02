@@ -8,12 +8,12 @@ entity control_unit is
     instr       : in unsigned(15 downto 0);
     state       : in unsigned(1 downto 0);
     zero, carry : in std_logic;
-    jump_en, rb_wr_en, a_wr_en, aluSrc, ram_wr_en,
-    invalidOpcode, br_en, rf_en  : out std_logic;
-    rb_in_sel, rb_out_sel        : out unsigned(2 downto 0);
-    aluOp, loadASrc, loadSrc     : out unsigned(1 downto 0);
-    jump_addr, br_addr, ram_addr : out unsigned(6 downto 0);
-    imm                          : out unsigned(15 downto 0)
+    jump_en, rb_wr_en, a_wr_en, aluSrc, ram_wr_en, loadSrc,
+    invalidOpcode, br_en, rf_en : out std_logic;
+    rb_in_sel, rb_out_sel       : out unsigned(2 downto 0);
+    aluOp, loadASrc             : out unsigned(1 downto 0);
+    jump_addr, br_addr          : out unsigned(6 downto 0);
+    imm                         : out unsigned(15 downto 0)
   );
 end entity;
 
@@ -47,38 +47,36 @@ begin
     '1' when opcode = or_op and state = "10" else
     '1' when opcode = mult and state = "10" else
     '1' when opcode = mov and state = "10" and instr(8) = '1' else
+    '1' when opcode = lw and state = "10" else
     '0';
   --escrita nos registradores
   rb_wr_en <= '1' when opcode = ld and state = "10" and instr(8) = '0' else
     '1' when opcode = mov and state = "10" and instr(8) = '0' else
-    '1' when opcode = lw else
     '0';
-  ram_wr_en <= '1' when opcode = sw else
+  ram_wr_en <= '1' when opcode = sw and state = "10" else
     '0';
   -- qual input da ula (cte ou rb)
   aluSrc <= '0' when opcode = addi or
     opcode = subi else
     '1';
   --qual dado escrever no rb
-  loadSrc <= "01" when opcode = mov and instr(8) = '0' else --mov
-    "10" when opcode = lw else
-    "00"; --imm
+  loadSrc <= '1' when opcode = mov and instr(8) = '0' else --mov
+    '0'; --imm
   --qual dado escrever no acumulador
   loadASrc <= "00" when opcode = ld and instr(8) = '1' else --lda
     "01" when opcode = mov and instr(8) = '1' else
+    "11" when opcode = lw else
     "10";
   --ativar jump
   jump_en <= '1' when opcode = jump else
     '0';
 
-  ram_addr <= instr(8 downto 2) when opcode = lw or
-    opcode = sw else
-    "0000000";
   rb_out_sel <= instr(11 downto 9) when opcode = add or
     opcode = sub or
     opcode = or_op or
     opcode = mult or
     opcode = cmp or
+    opcode = lw or
     opcode = sw else
     instr(11 downto 9) when opcode = mov and instr(8) = '1' else --mova
     "000";

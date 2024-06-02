@@ -28,11 +28,10 @@ REGISTERS = {
 }
 
 OIMM = ['addi', 'subi']
-ORX = ['add', 'sub', 'or', 'mult', 'cmp']
+ORX = ['add', 'sub', 'or', 'mult', 'cmp', 'lw', 'sw']
 MOV = ['mov', 'mova']
 JMPS = ['jump', 'beq', 'blt']
 LOAD = ['ld']
-RAM = ['lw', 'sw']
 
 
 def to_signed_binary(number, size):
@@ -71,12 +70,12 @@ def mov(line):
 
 def ld(line):
     valid_line(line, 3)
-    check_max_value(int(line.split()[2]), 8)
     words = line.split()
-    check_register(words[1])
+    check_max_value(int(words[2]), 8)
     if words[1].lower() == 'a':
         return ''.join([OPCODES[word] if i == 0 else '000' if i == 1 else '1' + to_signed_binary(int(word), 8) for i, word in enumerate(words)])
     else:
+        check_register(words[1])
         return ''.join([OPCODES[word] if i == 0 else REGISTERS[word] if i == 1 else '0' + to_signed_binary(int(word), 8) for i, word in enumerate(words)])
 
 def jump(line):
@@ -86,12 +85,6 @@ def jump(line):
     instr = ''.join([OPCODES[word] if i == 0 else to_signed_binary(int(word), 7) for i, word in enumerate(words)])
     return instr + '00000'
 
-def ram(line):
-    valid_line(line, 3)
-    check_register(line.split()[1])
-    check_max_value(int(line.split()[2]), 7)
-    instr = ''.join([OPCODES[word] if i == 0 else REGISTERS[word] if i == 1 else to_signed_binary(int(word), 7) for i, word in enumerate(line.split())])
-    return instr + '00'
     
 
 def valid_line(line, size):
@@ -125,8 +118,6 @@ def process_opcode(opcode, line):
             return jump(line)
         case _ if opcode in MOV:
             return mov(line)
-        case _ if opcode in RAM:
-            return ram(line)
         case _:
             raise ValueError(f"Error: Invalid opcode {opcode}")
 
