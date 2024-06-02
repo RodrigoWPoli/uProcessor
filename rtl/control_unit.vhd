@@ -35,7 +35,8 @@ architecture rtl of control_unit is
   constant blt     : unsigned(3 downto 0) := "1110";
   constant invalid : unsigned(3 downto 0) := "1111";
 begin
-  opcode <= instr(15 downto 12);
+  opcode <= instr(15 downto 12) when state = "01" else
+    "0000";
   rf_en  <= '1' when state = "01" else
     '0';
   --escrita no acumulador
