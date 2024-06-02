@@ -117,7 +117,7 @@ architecture rtl of uProcessor is
       instr       : in unsigned(15 downto 0);
       state       : in unsigned(1 downto 0);
       zero, carry : in std_logic;
-      jump_en, rb_wr_en, a_wr_en, aluSrc, ram_wr_en, loadSrc,
+      jump_en, rb_wr_en, a_wr_en, aluSrc, ram_wr_en, loadSrc, instr_en,
       invalidOpcode, br_en, rf_en : out std_logic;
       rb_in_sel, rb_out_sel       : out unsigned(2 downto 0);
       aluOp, loadASrc             : out unsigned(1 downto 0);
@@ -300,6 +300,7 @@ begin
   br_addr       => br_addr,
   rf_en         => rf_en,
   br_en         => br_en,
+  instr_en      => instr_en,
   ram_wr_en     => ram_wr_en
   );
   -- state: 00 fetch, 01 decode, 10 execute

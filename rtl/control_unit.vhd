@@ -8,7 +8,7 @@ entity control_unit is
     instr       : in unsigned(15 downto 0);
     state       : in unsigned(1 downto 0);
     zero, carry : in std_logic;
-    jump_en, rb_wr_en, a_wr_en, aluSrc, ram_wr_en, loadSrc,
+    jump_en, rb_wr_en, a_wr_en, aluSrc, ram_wr_en, loadSrc, instr_en,
     invalidOpcode, br_en, rf_en : out std_logic;
     rb_in_sel, rb_out_sel       : out unsigned(2 downto 0);
     aluOp, loadASrc             : out unsigned(1 downto 0);
@@ -36,24 +36,24 @@ architecture rtl of control_unit is
   constant invalid : unsigned(3 downto 0) := "1111";
 begin
   opcode <= instr(15 downto 12);
-  rf_en  <= '1' when state = "10" else
+  rf_en  <= '1' when state = "01" else
     '0';
   --escrita no acumulador
-  a_wr_en <= '1' when opcode = add and state = "10" else
-    '1' when opcode = addi and state = "10" else
-    '1' when opcode = sub and state = "10" else
-    '1' when opcode = subi and state = "10" else
-    '1' when opcode = ld and state = "10" and instr(8) = '1' else
-    '1' when opcode = or_op and state = "10" else
-    '1' when opcode = mult and state = "10" else
-    '1' when opcode = mov and state = "10" and instr(8) = '1' else
-    '1' when opcode = lw and state = "10" else
+  a_wr_en <= '1' when opcode = add and state = "01" else
+    '1' when opcode = addi and state = "01" else
+    '1' when opcode = sub and state = "01" else
+    '1' when opcode = subi and state = "01" else
+    '1' when opcode = ld and state = "01" and instr(8) = '1' else
+    '1' when opcode = or_op and state = "01" else
+    '1' when opcode = mult and state = "01" else
+    '1' when opcode = mov and state = "01" and instr(8) = '1' else
+    '1' when opcode = lw and state = "01" else
     '0';
   --escrita nos registradores
-  rb_wr_en <= '1' when opcode = ld and state = "10" and instr(8) = '0' else
-    '1' when opcode = mov and state = "10" and instr(8) = '0' else
+  rb_wr_en <= '1' when opcode = ld and state = "01" and instr(8) = '0' else
+    '1' when opcode = mov and state = "01" and instr(8) = '0' else
     '0';
-  ram_wr_en <= '1' when opcode = sw and state = "10" else
+  ram_wr_en <= '1' when opcode = sw and state = "01" else
     '0';
   -- qual input da ula (cte ou rb)
   aluSrc <= '0' when opcode = addi or

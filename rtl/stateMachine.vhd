@@ -16,7 +16,7 @@ begin
     if reset = '1' then
       state_signal <= "00";
     elsif rising_edge(clk) then
-      if state_signal = "10" then -- se agora esta em 2
+      if state_signal = "01" then -- se agora esta em 2
         state_signal <= "00"; -- o prox vai voltar ao zero
       else
         state_signal <= state_signal + 1; -- senao avanca
