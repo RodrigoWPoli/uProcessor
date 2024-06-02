@@ -1,8 +1,108 @@
-ld r0 0
-ld a 1
-add r0
-sw r0
-mov r0
-ld a 127
-cmp r0
-blt -7
+ld r0 3
+ld r1 7
+ld r2 13
+ld r3 16
+ld r4 28
+ld r5 40
+ld r6 100
+ld r7 110
+ld a 37
+sw R1
+ld a 94
+sw R1
+ld a -67
+sw R2
+lw R0
+mov R4
+lw R5
+mov R6
+lw R0
+mov R1
+ld a -96
+sw R5
+lw R1
+mov R0
+lw R3
+mov R2
+ld a 102
+sw R1
+ld a -15
+sw R7
+ld a -55
+sw R7
+ld a -65
+sw R5
+ld a 23
+sw R1
+ld a -123
+sw R1
+ld a -11
+sw R1
+lw R1
+mov R0
+ld a -14
+sw R6
+ld a 91
+sw R4
+ld a 65
+sw R7
+lw R4
+mov R5
+ld a -93
+sw R3
+ld a -42
+sw R0
+ld a 109
+sw R6
+lw R7
+mov R0
+lw R3
+mov R4
+ld a -7
+sw R0
+ld a -126
+sw R5
+lw R1
+mov R4
+ld a -101
+sw R7
+ld a -62
+sw R2
+ld a -76
+sw R4
+lw R0
+mov R3
+lw R4
+mov R0
+lw R6
+mov R7
+ld a 83
+sw R2
+lw R2
+mov R4
+lw R5
+mov R0
+ld a -26
+sw R5
+lw R2
+mov R1
+lw R2
+mov R5
+lw R7
+mov R5
+ld a -75
+sw R7
+ld a 116
+sw R7
+lw R6
+mov R3
+ld a 62
+sw R7
+lw R7
+mov R6
+ld a -8
+sw R7
+lw R7
+mov R5
+ld a 103
+sw R1
