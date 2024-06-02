@@ -1,14 +1,8 @@
-ld r0 3
-ld r1 7
-ld r2 13
-ld r3 16
-ld r3 21
-ld r4 28
-ld r5 40
-ld r6 100
-ld r7 -110
-sw r3 15
-lw r0 15
-sw r1 30
-sw r7 50
-lw r6 15
+ld r0 0
+ld a 1
+add r0
+sw r0
+mov r0
+ld a 127
+cmp r0
+blt -7
