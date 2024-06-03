@@ -35,28 +35,70 @@ Digitar o código desejado em assembly.txt e depois rodar make.
 
 4. Commandos:
 
-crivo (incompleto):
-ld r0 0
+crivo:
+carrega até 120
+ld r0 2
+ld a 2
+sw r0
 ld a 1
 add r0
-sw r0
 mov r0
-ld a 30
+sw r0
+ld a 120
 cmp r0
 blt -7
-
-teste da ram:
-ld r0 3
+elimina todos os múltiplos de 2:
+ld r2 0
+ld r1 2
+ld a 2
+add r1
+mov r1
+mov a r2
+sw r1
+ld a 120
+cmp r1
+blt -8
+elimina todos os múltiplos de 3:
+ld r2 0
+ld r1 3
+ld a 3
+add r1
+mov r1
+mov a r2
+sw r1
+ld a 120
+cmp r1
+blt -8
+elimina todos os múltiplos de 5:
+ld r2 0
+ld r1 5
+ld a 5
+add r1
+mov r1
+mov a r2
+sw r1
+ld a 120
+cmp r1
+blt -8
+elimina todos os múltiplos de 7:
+ld r2 0
 ld r1 7
-ld r2 13
-ld r3 16
-ld r3 21
-ld r4 28
-ld r5 40
-ld r6 100
-ld r7 -110
-sw r3 15
-lw r0 15
-sw r1 30
-sw r7 50
-lw r6 15
+ld a 7
+add r1
+mov r1
+mov a r2
+sw r1
+ld a 120
+cmp r1
+blt -8
+elimina todos os múltiplos de 11:
+ld r2 0
+ld r1 11
+ld a 11
+add r1
+mov r1
+mov a r2
+sw r1
+ld a 120
+cmp r1
+blt -8

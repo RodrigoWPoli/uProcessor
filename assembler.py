@@ -58,12 +58,13 @@ def oimm(line):
 
 def mov(line):
     words = line.split()
-    check_register(words[1])
     if words[1].lower() == 'a':
+        check_register(words[2])
         valid_line(line, 3)
         instr = ''.join([OPCODES[word] if i == 0 else REGISTERS[word] for i, word in enumerate(words) if i != 1])
         return instr + '100000000'
     else:
+        check_register(words[1])
         valid_line(line, 2)
         instr = ''.join([OPCODES[word] if i == 0 else REGISTERS[word] for i, word in enumerate(words)])
         return instr + '000000000'

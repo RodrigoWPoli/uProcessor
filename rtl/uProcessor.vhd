@@ -149,7 +149,7 @@ architecture rtl of uProcessor is
   signal pc_out, pc_in, jump_addr, br_addr, ram_addr             : unsigned(6 downto 0)  := "0000000";
   signal rb_in_sel, rb_out_sel                                   : unsigned(2 downto 0)  := "000";
   signal aluOp, state, loadASrc                                  : unsigned(1 downto 0)  := "00";
-  signal rb_wr_en, zero, carry, aluSrc, a_wr_en, instr_en, ram_wr_en, sm_reset, exception_s, clk, loadSrc,
+  signal rb_wr_en, zero, carry, aluSrc, a_wr_en, instr_en, ram_wr_en, exception_s, clk, loadSrc,
   pc_en, jump_en, opcodeException, br_en, carry_out, zero_out, rf_en : std_logic := '0';
 begin
   exceptionRegister : register1bit port map
@@ -281,7 +281,7 @@ begin
   controlUnit : control_unit port
   map
   (
-  instr         => instr,
+  instr         => instr_out,
   jump_en       => jump_en,
   rb_wr_en      => rb_wr_en,
   a_wr_en       => a_wr_en,
