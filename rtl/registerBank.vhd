@@ -7,6 +7,7 @@ entity registerBank is
     port
         (
         outData      : out unsigned(15 downto 0);
+        crivoOut     : out unsigned(15 downto 0);
         inData       : in  unsigned(15 downto 0);
         writeSel     : in  unsigned(2 downto 0);
         outSel       : in unsigned(2 downto 0);
@@ -58,5 +59,5 @@ outData <= outR0Data when outSel = "000" else
        outR6Data when outSel = "110" else
        outR7Data when outSel = "111" else
         "0000000000000000";
-
+crivoOut <= outR7Data;
 end architecture;

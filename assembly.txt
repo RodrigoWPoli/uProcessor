@@ -58,3 +58,12 @@ sw r1
 ld a 120
 cmp r1
 blt -8
+ld r0 1
+ld a 1
+add r0
+mov r0
+lw r0
+mov r7
+ld a 120
+cmp r0
+blt -8

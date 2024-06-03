@@ -48,13 +48,13 @@ ld a 120
 cmp r0
 blt -7
 elimina todos os múltiplos de 2:
-ld r2 0
-ld r1 2
-ld a 2
-add r1
-mov r1
-mov a r2
-sw r1
+ld r2 0     --r2: registrador com o valor para "apagar" o número
+ld r1 2     --r1: registrador com o valor para remover após somar com ele mesmo nas próximas 2 linhas
+ld a 2      -- carrega o acumulador com a próxima instância da multiplicação
+add r1      -- soma a prox inst
+mov r1      -- armazena em r1
+mov a r2    -- pega o valor pra apagar
+sw r1       -- apaga o valor
 ld a 120
 cmp r1
 blt -8
@@ -101,4 +101,14 @@ mov a r2
 sw r1
 ld a 120
 cmp r1
+blt -8
+lê os valores sobrando:
+ld r0 1
+ld a 1
+add r0
+mov r0
+lw r0
+mov r7
+ld a 120
+cmp r0
 blt -8

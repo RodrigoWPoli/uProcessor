@@ -8,7 +8,8 @@ entity uProcessor is
   (
     clk_in    : in std_logic;
     reset     : in std_logic;
-    exception : out std_logic
+    exception : out std_logic;
+    crivoOut  : out unsigned(15 downto 0)
   );
 end entity;
 
@@ -49,12 +50,14 @@ architecture rtl of uProcessor is
   component registerBank is
     port
     (
-      outData    : out unsigned(15 downto 0);
-      inData     : in unsigned(15 downto 0);
-      writeSel   : in unsigned(2 downto 0);
-      outSel     : in unsigned(2 downto 0);
-      wr_en      : in std_logic;
-      clk, reset : in std_logic
+      outData  : out unsigned(15 downto 0);
+      crivoOut : out unsigned(15 downto 0);
+      inData   : in unsigned(15 downto 0);
+      writeSel : in unsigned(2 downto 0);
+      outSel   : in unsigned(2 downto 0);
+      wr_en    : in std_logic;
+      clk      : in std_logic;
+      reset    : in std_logic
     );
   end component;
   component register16bits is
@@ -175,6 +178,7 @@ begin
   map
   (
   outData  => rbOut,
+  crivoOut => crivoOut,
   inData   => rbInData,
   writeSel => rb_in_sel,
   outSel   => rb_out_sel,
