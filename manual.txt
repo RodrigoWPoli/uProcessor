@@ -16,8 +16,8 @@ mov A/RD/RS   -> move o valor de um registrador ao acumulador e vice-versa
 jump  addr    -> pula absolutamente a um endereço
 BEQ   addr    -> pula relativamente a um endereço quando a flag de zero estiver ativa (comparação entre 2 valores for igual no endereço imediatamente anterior)
 BLT   addr    -> pula relativamente a um endereço quando a flag de carry estiver ativa (comparação entre 2 valores for negativa no endereço imediatamente anterior)
-lw RD addr    -> carrega o valor de um endereço da ram a um registrador
-sw RS addr    -> armazena o valor de um registrador num endereço da ram
+lw RD         -> carrega o valor de um endereço da ram no acumulador
+sw RS         -> armazena o valor do acumulador num endereço da ram
 
 2. Requisito:
 Ter ghdl, gtkwave e python3.13 instalados
@@ -35,18 +35,70 @@ Digitar o código desejado em assembly.txt e depois rodar make.
 
 4. Commandos:
 
-teste da ram:
-ld r0 3
+crivo:
+carrega até 120
+ld r0 2
+ld a 2
+sw r0
+ld a 1
+add r0
+mov r0
+sw r0
+ld a 120
+cmp r0
+blt -7
+elimina todos os múltiplos de 2:
+ld r2 0
+ld r1 2
+ld a 2
+add r1
+mov r1
+mov a r2
+sw r1
+ld a 120
+cmp r1
+blt -8
+elimina todos os múltiplos de 3:
+ld r2 0
+ld r1 3
+ld a 3
+add r1
+mov r1
+mov a r2
+sw r1
+ld a 120
+cmp r1
+blt -8
+elimina todos os múltiplos de 5:
+ld r2 0
+ld r1 5
+ld a 5
+add r1
+mov r1
+mov a r2
+sw r1
+ld a 120
+cmp r1
+blt -8
+elimina todos os múltiplos de 7:
+ld r2 0
 ld r1 7
-ld r2 13
-ld r3 16
-ld r3 21
-ld r4 28
-ld r5 40
-ld r6 100
-ld r7 -110
-sw r3 15
-lw r0 15
-sw r1 30
-sw r7 50
-lw r6 15
+ld a 7
+add r1
+mov r1
+mov a r2
+sw r1
+ld a 120
+cmp r1
+blt -8
+elimina todos os múltiplos de 11:
+ld r2 0
+ld r1 11
+ld a 11
+add r1
+mov r1
+mov a r2
+sw r1
+ld a 120
+cmp r1
+blt -8
