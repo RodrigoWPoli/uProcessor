@@ -281,7 +281,7 @@ begin
   controlUnit : control_unit port
   map
   (
-  instr         => instr_out,
+  instr         => instr,
   jump_en       => jump_en,
   rb_wr_en      => rb_wr_en,
   a_wr_en       => a_wr_en,
