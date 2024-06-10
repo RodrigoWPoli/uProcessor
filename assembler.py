@@ -124,10 +124,13 @@ def process_opcode(opcode, line):
 
 def compile(file_name):
     code = []
+    command = []
     previous_instruction = None
     with open(file_name, 'r') as f:
         for i, line in enumerate(f):
             line = line.strip()
+            command.append(line)
+            line = line.replace(',', '')
             if not line:
                 continue
             opcode = line.split()[0].lower()
@@ -135,10 +138,10 @@ def compile(file_name):
                 raise ValueError(f"Error at line {i + 1}: {opcode} instruction without a preceding cmp instruction")
             code.append(process_opcode(opcode, line.lower()))
             previous_instruction = opcode
-    return code
+    save_to_rom(code, command)
 
     
-def save_to_rom(code, filename='rtl/rom.vhd'):
+def save_to_rom(code, command, filename='rtl/rom.vhd'):
     with open(filename, 'w') as f:
         f.write('library ieee;\n')
         f.write('use ieee.std_logic_1164.all;\n')
@@ -156,7 +159,7 @@ def save_to_rom(code, filename='rtl/rom.vhd'):
         f.write('  constant rom_content : mem := (\n')
         
         for i, binary in enumerate(code):
-            f.write(f'        {i} => "{binary}",\n')
+            f.write(f'        {i} => "{binary}", --{command[i]}\n')
 
         f.write('        others => (others => \'0\')\n')
         f.write('  );\n')
@@ -170,5 +173,4 @@ def save_to_rom(code, filename='rtl/rom.vhd'):
         f.write('end architecture;\n')
 
 if __name__ == "__main__":
-    code = compile('assembly.txt')
-    save_to_rom(code)
+    compile('assembly.txt')

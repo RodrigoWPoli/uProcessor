@@ -1,69 +1,69 @@
-ld r0 2
-ld a 2
-sw r0
-ld a 1
-add r0
-mov r0
-sw r0
-ld a 120
-cmp r0
-blt -7
-ld r2 0
-ld r1 2
-ld a 2
-add r1
-mov r1
-mov a r2
-sw r1
-ld a 120
-cmp r1
-blt -8
-ld r2 0
-ld r1 3
-ld a 3
-add r1
-mov r1
-mov a r2
-sw r1
-ld a 120
-cmp r1
-blt -8
-ld r2 0
-ld r1 5
-ld a 5
-add r1
-mov r1
-mov a r2
-sw r1
-ld a 120
-cmp r1
-blt -8
-ld r2 0
-ld r1 7
-ld a 7
-add r1
-mov r1
-mov a r2
-sw r1
-ld a 120
-cmp r1
-blt -8
-ld r2 0
-ld r1 11
-ld a 11
-add r1
-mov r1
-mov a r2
-sw r1
-ld a 120
-cmp r1
-blt -8
-ld r0 1
-ld a 1
-add r0
-mov r0
+ld, r0, 2
+ld, a, 2
+sw, r0
+ld, a, 1
+add, r0
+mov, r0
+sw, r0
+ld, a, 120
+cmp, r0
+blt, -7
+ld, r2, 0
+ld, r1, 2
+ld, a, 2
+add, r1
+mov, r1
+mov, a, r2
+sw, r1
+ld, a, 120
+cmp, r1
+blt, -8
+ld, r2, 0
+ld, r1, 3
+ld, a, 3
+add, r1
+mov, r1
+mov, a, r2
+sw, r1
+ld, a, 120
+cmp, r1
+blt, -8
+ld, r2, 0
+ld, r1, 5
+ld, a, 5
+add, r1
+mov, r1
+mov, a, r2
+sw, r1
+ld, a, 120
+cmp, r1
+blt, -8
+ld, r2, 0
+ld, r1, 7
+ld, a, 7
+add, r1
+mov, r1
+mov, a, r2
+sw, r1
+ld, a, 120
+cmp, r1
+blt, -8
+ld, r2, 0
+ld, r1, 11
+ld, a, 11
+add, r1
+mov, r1
+mov, a, r2
+sw, r1
+ld, a, 120
+cmp, r1
+blt, -8
+ld, r0, 1
+ld, a, 1
+add, r0
+mov, r0
 lw r0
-mov r7
-ld a 120
-cmp r0
-blt -8
+mov, r7
+ld, a, 120
+cmp, r0
+blt, -8
