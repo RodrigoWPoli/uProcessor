@@ -1,6 +1,11 @@
 ## µProcessor architecture for Computer architecture class in UTFPR
 
-run with make simulate tb=testBenchXXXX
+run with:
+
+```bash
+make assemble
+make
+```
 
 add rtl and tb names to elaborate in makefile for new files
 
